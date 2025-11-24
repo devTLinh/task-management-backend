@@ -1,24 +1,26 @@
-import db from '../models/index';
+import db from '../models/index.js';
 import _ from 'lodash';
-import emailServices from './emailServices';
+import emailServices from './emailServices.js';
 import {
    checkIsValidInput
-} from '../helpers/checkIsValidInput';
+} from '../helpers/checkIsValidInput.js';
 import {
-   hashValue
-} from '../helpers/hashValue';
+    hashValue
+} from '../helpers/hashValue.js';
 import {
    randomDigitString
-} from '../helpers/randomDigitString';
+} from '../helpers/randomDigitString.js';
 import {
    Op
 } from 'sequelize';
 import {
    randomString
-} from '../helpers/randomString';
+} from '../helpers/randomString.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-require('dotenv').config();
+import dotenv from 'dotenv';
+dotenv.config();
+
 
 let postCreateUser = (data) => {
    return new Promise(async (resolve, reject) => {
@@ -428,15 +430,16 @@ let getSearchUsersByUserName = (name) => {
    })
 }
 
-module.exports = {
-   postCreateUser: postCreateUser,
-   putEditUser: putEditUser,
-   getAllUsers: getAllUsers,
-   getUserById: getUserById,
-   deleteUser: deleteUser,
-   postLogin: postLogin,
-   postForgotPassword: postForgotPassword,
-   postVerifyForgotPassword: postVerifyForgotPassword,
-   getSearchUsersByUserName: getSearchUsersByUserName,
+const userServices = {
+    postCreateUser,
+    putEditUser,
+    getAllUsers,
+    getUserById,
+    deleteUser,
+    postLogin,
+    postForgotPassword,
+    postVerifyForgotPassword,
+    getSearchUsersByUserName
+};
 
-}
+export default userServices;

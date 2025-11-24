@@ -1,7 +1,7 @@
-import express from "express";
+﻿import express from "express";
 // import authMiddleware from '../middlewares/client/auth.middleware';
-// import homeController from "../controllers/homeController";
-// import userController from "../controllers/userController";
+import homeController from "../controllers/homeController.js";
+import userController from "../controllers/userController.js";
 // import projectController from '../controllers/projectController';
 // import taskController from '../controllers/taskController';
 // import commentController from '../controllers/commentController';
@@ -12,12 +12,20 @@ let router = express.Router();
 
 let initWebRoutes = (app) => {
    router.get('/', (req, res) => {
-      return res.render("home/index", {
-         title: "Home Page",
-         data: 'Hello world',
-         day: '2025-04-22'
+       return res.render("auth/login", {
+           title: "Login",
+           errorMessage: null,
+           layout: false,
+           user: null
       });
    });
+    router.get('/login', (req, res) => {
+        return res.render("auth/login", {
+            title: "Login",
+            errorMessage: null,
+            layout: false
+        });
+    });
 
    router.get('/home', homeController.getHomePage);
 
@@ -30,10 +38,22 @@ let initWebRoutes = (app) => {
    // router.get('/api/search-users-by-username', userController.getSearchUsersByUserName);
 
    // API login
-   // router.post('/api/login', userController.postLogin);
-   // router.post('/api/logout', userController.postLogOut);
-   // router.post('/api/forgot-password', userController.postForgotPassword);
-   // router.post('/api/verify-forgot-password', userController.postVerifyForgotPassword);
+   router.post('/api/login', userController.postLogin);
+   router.post('/api/logout', userController.postLogOut);
+   router.post('/api/forgot-password', userController.postForgotPassword);
+   router.post('/api/verify-forgot-password', userController.postVerifyForgotPassword);
+    // Bổ sung Route GET để hiển thị trang đăng ký
+   router.get('/register', (req, res) => {
+        // Hiển thị form đăng ký
+        return res.render('auth/register', {
+            pageTitle: 'Create Account — TaskManager',
+            errorMessage: null, // Biến hiển thị lỗi
+            oldValues: {},       // Biến giữ lại dữ liệu form cũ
+            layout: false
+        });
+   });
+    // Bổ sung Route POST để xử lý form đăng ký
+    router.post('/register', userController.postRegister);   // <--- Mới
 
    // API project
    // router.post('/api/create-project', projectController.postCreateProject);

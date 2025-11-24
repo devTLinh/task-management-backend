@@ -1,0 +1,187 @@
+-- Thiết lập Database
+CREATE DATABASE IF NOT EXISTS taskmanagement
+DEFAULT CHARACTER SET utf8mb4 
+COLLATE utf8mb4_unicode_ci;
+
+USE taskmanagement;
+
+-- -----------------------------------------------------
+-- 1. Bảng USERS (Người dùng)
+-- -----------------------------------------------------
+CREATE TABLE Users (
+    UserID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    UserName VARCHAR(50) NOT NULL UNIQUE,
+    Email VARCHAR(100) NOT NULL UNIQUE,
+    PasswordHash CHAR(60) NOT NULL COMMENT 'Lưu trữ hash của mật khẩu (ví dụ: bcrypt)',
+    FullName VARCHAR(100) NOT NULL,
+    Role ENUM('Admin', 'Manager', 'Member') NOT NULL DEFAULT 'Member',
+    CreatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UpdatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    
+    PRIMARY KEY (UserID)
+) ENGINE=InnoDB;
+
+-- -----------------------------------------------------
+-- 2. Bảng PROJECTS (Dự án)
+-- -----------------------------------------------------
+CREATE TABLE Projects (
+    ProjectID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    Name VARCHAR(255) NOT NULL UNIQUE,
+    Description TEXT,
+    StartDate DATE NOT NULL,
+    EndDate DATE,
+    Status ENUM('Pending', 'InProgress', 'Completed', 'Cancelled') NOT NULL DEFAULT 'Pending',
+    CreatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UpdatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CreatedBy INT UNSIGNED NOT NULL,
+    
+    PRIMARY KEY (ProjectID),
+    
+    -- Khóa ngoại: Dự án được tạo bởi ai
+    FOREIGN KEY (CreatedBy) REFERENCES Users(UserID)
+        ON DELETE RESTRICT 
+        ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
+-- -----------------------------------------------------
+-- 3. Bảng PROJECTMEMBERS (Thành viên Dự án - Bảng liên kết nhiều-nhiều)
+-- -----------------------------------------------------
+CREATE TABLE ProjectMembers (
+    MemberID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    ProjectID INT UNSIGNED NOT NULL,
+    UserID INT UNSIGNED NOT NULL,
+    Role ENUM('ProjectManager', 'TeamLead', 'Developer', 'Viewer') NOT NULL DEFAULT 'Developer',
+    JoinedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    
+    PRIMARY KEY (MemberID),
+    
+    -- Đảm bảo một người dùng chỉ là thành viên của một dự án một lần
+    UNIQUE KEY (ProjectID, UserID), 
+    
+    -- Khóa ngoại: Liên kết đến Dự án
+    FOREIGN KEY (ProjectID) REFERENCES Projects(ProjectID)
+        ON DELETE CASCADE 
+        ON UPDATE CASCADE,
+        
+    -- Khóa ngoại: Liên kết đến Người dùng
+    FOREIGN KEY (UserID) REFERENCES Users(UserID)
+        ON DELETE RESTRICT 
+        ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
+-- -----------------------------------------------------
+-- 4. Bảng TASKS (Công việc)
+-- -----------------------------------------------------
+CREATE TABLE Tasks (
+    TaskID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    ProjectID INT UNSIGNED NOT NULL,
+    AssignedTo INT UNSIGNED COMMENT 'Người được giao việc (null nếu chưa giao)',
+    Title VARCHAR(255) NOT NULL,
+    Description TEXT,
+    Status ENUM('ToDo', 'InProgress', 'InReview', 'Done', 'Blocked') NOT NULL DEFAULT 'ToDo',
+    Priority ENUM('Low', 'Medium', 'High', 'Urgent') NOT NULL DEFAULT 'Medium',
+    DueDate DATE,
+    CreatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UpdatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    
+    PRIMARY KEY (TaskID),
+    
+    -- Khóa ngoại: Công việc thuộc dự án nào
+    FOREIGN KEY (ProjectID) REFERENCES Projects(ProjectID)
+        ON DELETE CASCADE 
+        ON UPDATE CASCADE,
+        
+    -- Khóa ngoại: Công việc được giao cho ai
+    FOREIGN KEY (AssignedTo) REFERENCES Users(UserID)
+        ON DELETE SET NULL 
+        ON UPDATE CASCADE 
+) ENGINE=InnoDB;
+
+-- -----------------------------------------------------
+-- 5. Bảng COMMENTS (Bình luận)
+-- -----------------------------------------------------
+CREATE TABLE Comments (
+    CommentID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    TaskID INT UNSIGNED NOT NULL,
+    UserID INT UNSIGNED NOT NULL,
+    Content TEXT NOT NULL,
+    CreatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    
+    PRIMARY KEY (CommentID),
+    
+    -- Khóa ngoại: Bình luận thuộc về công việc nào
+    FOREIGN KEY (TaskID) REFERENCES Tasks(TaskID)
+        ON DELETE CASCADE 
+        ON UPDATE CASCADE,
+        
+    -- Khóa ngoại: Bình luận được viết bởi ai
+    FOREIGN KEY (UserID) REFERENCES Users(UserID)
+        ON DELETE RESTRICT 
+        ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
+-- -----------------------------------------------------
+-- 6. Bảng FILES (Tập tin đính kèm)
+-- -----------------------------------------------------
+CREATE TABLE Files (
+    FileID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    TaskID INT UNSIGNED NOT NULL,
+    FileName VARCHAR(255) NOT NULL,
+    FilePath VARCHAR(512) NOT NULL,
+    UploadedBy INT UNSIGNED NOT NULL,
+    CreatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    
+    PRIMARY KEY (FileID),
+    
+    -- Khóa ngoại: File đính kèm cho công việc nào
+    FOREIGN KEY (TaskID) REFERENCES Tasks(TaskID)
+        ON DELETE CASCADE 
+        ON UPDATE CASCADE,
+        
+    -- Khóa ngoại: File được tải lên bởi ai
+    FOREIGN KEY (UploadedBy) REFERENCES Users(UserID)
+        ON DELETE RESTRICT 
+        ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
+-- -----------------------------------------------------
+-- 7. Bảng TASKHISTORY (Lịch sử thay đổi Công việc)
+-- -----------------------------------------------------
+CREATE TABLE TaskHistory (
+    HistoryID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    TaskID INT UNSIGNED NOT NULL,
+    ChangedBy INT UNSIGNED NOT NULL,
+    ChangedField VARCHAR(100) NOT NULL,
+    OldValue TEXT,
+    NewValue TEXT,
+    ChangedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    
+    PRIMARY KEY (HistoryID),
+    
+    -- Khóa ngoại: Theo dõi lịch sử của công việc nào
+    FOREIGN KEY (TaskID) REFERENCES Tasks(TaskID)
+        ON DELETE CASCADE 
+        ON UPDATE CASCADE,
+        
+    -- Khóa ngoại: Ai là người thực hiện thay đổi
+    FOREIGN KEY (ChangedBy) REFERENCES Users(UserID)
+        ON DELETE RESTRICT 
+        ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
+-- -----------------------------------------------------
+-- 8. Bảng ACTIVITYLOGS (Nhật ký Hoạt động Chung)
+-- -----------------------------------------------------
+CREATE TABLE ActivityLogs (
+    LogID INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    UserID INT UNSIGNED COMMENT 'Người dùng thực hiện hành động (null nếu là hành động hệ thống)',
+    Action VARCHAR(512) NOT NULL COMMENT 'Mô tả chi tiết hành động',
+    CreatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    
+    PRIMARY KEY (LogID),
+    
+    -- Khóa ngoại: Hành động được thực hiện bởi ai
+    FOREIGN KEY (UserID) REFERENCES Users(UserID)
+        ON DELETE SET NULL 
+        ON UPDATE CASCADE 
+) ENGINE=InnoDB;

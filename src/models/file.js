@@ -1,26 +1,41 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class file extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      // define association here
-    }
-  }
-  file.init({
-    taskId: DataTypes.INTEGER,
-    filePath: DataTypes.TEXT,
-    updatedAt: DataTypes.STRING,
-    uploadedBy: DataTypes.STRING
+  const File = sequelize.define('File', {
+    FileID: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false
+    },
+    TaskID: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: false
+    },
+    FileName: {
+      type: DataTypes.STRING(255),
+      allowNull: false
+    },
+    FilePath: {
+      type: DataTypes.STRING(512),
+      allowNull: false
+    },
+    UploadedBy: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: false
+    },
+    CreatedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW
+    },
   }, {
-    sequelize,
-    modelName: 'file',
+    tableName: 'Files',
+    timestamps: false // Không có UpdatedAt
   });
-  return file;
+
+  File.associate = (models) => {
+    File.belongsTo(models.Task, { foreignKey: 'TaskID', targetKey: 'TaskID' });
+    File.belongsTo(models.User, { foreignKey: 'UploadedBy', targetKey: 'UserID', as: 'Uploader' });
+  };
+
+  return File;
 };

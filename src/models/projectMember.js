@@ -1,27 +1,44 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
-module.exports = (sequelize, DataTypes) => {
-  class projectMember extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      // define association here
-      projectMember.belongsTo(models.User, {foreignKey: 'userId', targetKey: 'id', as: 'projectMemeberInfo'})
-    }
-  }
-  projectMember.init({
-    projectId: DataTypes.INTEGER,
-    userId: DataTypes.INTEGER,
-    role: DataTypes.STRING,
-    joinedAt: DataTypes.STRING
+﻿module.exports = (sequelize, DataTypes) => {
+  const ProjectMember = sequelize.define('ProjectMember', {
+    MemberID: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false
+    },
+    ProjectID: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: false
+    },
+    UserID: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: false
+    },
+    Role: {
+      type: DataTypes.ENUM('ProjectManager', 'TeamLead', 'Developer', 'Viewer'),
+      allowNull: false,
+      defaultValue: 'Developer'
+    },
+    JoinedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW
+    },
   }, {
-    sequelize,
-    modelName: 'projectMember',
+    tableName: 'ProjectMembers',
+    timestamps: false,
+    indexes: [
+      {
+        unique: true,
+        fields: ['ProjectID', 'UserID'] // Thiết lập UNIQUE KEY cho cặp cột
+      }
+    ]
   });
-  return projectMember;
+
+  ProjectMember.associate = (models) => {
+    ProjectMember.belongsTo(models.Project, { foreignKey: 'ProjectID', targetKey: 'ProjectID' });
+    ProjectMember.belongsTo(models.User, { foreignKey: 'UserID', targetKey: 'UserID' });
+  };
+
+  return ProjectMember;
 };

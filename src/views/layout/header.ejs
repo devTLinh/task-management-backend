@@ -1,0 +1,32 @@
+﻿<header class="navbar">
+    <div class="navbar__logo">
+        <a href="/">
+            <i class="fa-solid fa-list-check"></i> TaskManager
+        </a>
+    </div>
+
+    <nav class="navbar__menu">
+        <a href="#why">Why</a>
+        <a href="#features">Features</a>
+        <a href="#showcase">Showcase</a>
+        <a href="#faq">FAQ</a>
+    </nav>
+
+    <div class="navbar__auth">
+        <% if (user) { %>
+        <a class="btn btn--secondary" href="/dashboard">
+            <i class="fa-solid fa-gauge"></i> Dashboard
+        </a>
+        <a class="btn btn--white" href="/logout">
+            <i class="fa-solid fa-right-from-bracket"></i> Logout
+        </a>
+        <% } else { %>
+        <a class="btn btn--white" href="/login">
+            Sign In
+        </a>
+        <a class="btn btn--primary" href="/register">
+            Get Started
+        </a>
+        <% } %>
+    </div>
+</header>

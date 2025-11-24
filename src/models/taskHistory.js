@@ -1,27 +1,45 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class taskHistory extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      // define association here
-    }
-  }
-  taskHistory.init({
-    taskId: DataTypes.INTEGER,
-    changedBy: DataTypes.STRING,
-    changedField: DataTypes.STRING,
-    oldValue: DataTypes.TEXT,
-    newValue: DataTypes.TEXT
+  const TaskHistory = sequelize.define('TaskHistory', {
+    HistoryID: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false
+    },
+    TaskID: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: false
+    },
+    ChangedBy: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      allowNull: false
+    },
+    ChangedField: {
+      type: DataTypes.STRING(100),
+      allowNull: false
+    },
+    OldValue: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    NewValue: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    ChangedAt: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW
+    },
   }, {
-    sequelize,
-    modelName: 'taskHistory',
+    tableName: 'TaskHistory',
+    timestamps: false // Không có UpdatedAt
   });
-  return taskHistory;
+
+  TaskHistory.associate = (models) => {
+    TaskHistory.belongsTo(models.Task, { foreignKey: 'TaskID', targetKey: 'TaskID' });
+    TaskHistory.belongsTo(models.User, { foreignKey: 'ChangedBy', targetKey: 'UserID', as: 'Changer' });
+  };
+
+  return TaskHistory;
 };

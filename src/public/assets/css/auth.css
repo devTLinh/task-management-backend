@@ -1,0 +1,158 @@
+/* ===== AUTH COMMON ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(120deg, #34d399, #10b981, #059669);
+  background-size: 400% 400%;
+  animation: bgShift 10s ease-in-out infinite;
+}
+
+@keyframes bgShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ===== AUTH BOX ===== */
+.auth__container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.auth__box {
+  width: 400px;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  padding: 40px 35px;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+  animation: fadeIn 0.8s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== LOGO ===== */
+.auth__logo {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #059669;
+  margin-bottom: 20px;
+}
+
+/* ===== TEXT ===== */
+.auth__title {
+  font-size: 1.8rem;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+.auth__desc {
+  color: #6b7280;
+  font-size: 0.9rem;
+  margin-bottom: 30px;
+}
+
+/* ===== FORM ===== */
+.auth__form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.auth__field label {
+  display: block;
+  text-align: left;
+  color: #374151;
+  font-size: 0.85rem;
+  margin-bottom: 5px;
+}
+
+.auth__field input {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  outline: none;
+  font-size: 0.95rem;
+  transition: 0.3s;
+}
+
+.auth__field input:focus {
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25);
+}
+
+/* ===== BUTTON ===== */
+.btn {
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn--primary {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #fff;
+  box-shadow: 0 6px 20px rgba(5, 150, 105, 0.3);
+}
+
+.btn--primary:hover {
+  transform: scale(1.05);
+}
+
+/* ===== LINKS ===== */
+.auth__switch {
+  font-size: 0.9rem;
+  color: #4b5563;
+}
+
+.auth__switch a {
+  color: #059669;
+  font-weight: 600;
+  text-decoration: none;
+  transition: 0.3s;
+}
+.auth__switch a:hover {
+  text-decoration: none;
+}
+
+.auth__back {
+  display: inline-block;
+  margin-top: 20px;
+  font-size: 0.85rem;
+  color: #6b7280;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.auth__back:hover {
+  color: #059669;
+}
+
+/* ===== ICON SPACING (Auth pages) ===== */
+/* Give Font Awesome icons a consistent gap from text in auth views */
+i.fa, i.fas, i.far, i.fab, i.fa-solid, i.fa-regular, i.fa-brands { margin-right: 8px; }
+/* Common clickable/label elements inside auth box */
+:where(.auth__box a, .auth__box button, .auth__box .btn, .auth__form label) > i { margin-right: 8px; }
+/* If an icon appears after text (rare), remove right margin */
+.auth__box .icon-trail i { margin-right: 0; margin-left: 6px; }

@@ -1,4 +1,4 @@
-import userServices from '../services/userServices';
+﻿import userServices from '../services/userServices.js';
 
 let postCreateUser = async (req, res) => {
    try {
@@ -142,16 +142,55 @@ let getSearchUsersByUserName = async (req, res) => {
    }
 }
 
-module.exports = {
-   postCreateUser: postCreateUser,
-   putEditUser: putEditUser,
-   getAllUsers: getAllUsers,
-   getUserById: getUserById,
-   deleteUser: deleteUser,
-   postLogin: postLogin,
-   postLogOut: postLogOut,
-   postForgotPassword: postForgotPassword,
-   postVerifyForgotPassword: postVerifyForgotPassword,
-   getSearchUsersByUserName: getSearchUsersByUserName,
+let postRegister = async (req, res) => {
+    // Xử lý dữ liệu POST từ form
+    const { email, password, fullName } = req.body;
 
-} 
+    // * TẠM THỜI GÁN DỮ LIỆU MẶC ĐỊNH BỊ THIẾU *
+    // Vì service yêu cầu 5 trường, ta bổ sung 2 trường còn thiếu
+    const dataWithDefaults = {
+        ...req.body,
+        userName: req.body.email.split('@')[0], // Gán userName bằng phần trước @ của email
+        role: 'Member' // Gán vai trò mặc định
+    };
+
+    try {
+        // Gọi Service với dữ liệu đầy đủ
+        let response = await userServices.postCreateUser(dataWithDefaults);
+
+        if (response && response.errorCode === 0) {
+            // Đăng ký thành công: Chuyển hướng về trang đăng nhập
+            return res.redirect('/login?registered=success');
+        } else {
+            // Đăng ký thất bại: Render lại trang với thông báo lỗi
+            return res.render('auth/register', {
+                pageTitle: 'Create Account — TaskManager',
+                errorMessage: response.errorMessage || 'Đăng ký thất bại. Vui lòng thử lại.',
+                oldValues: { email, fullName }
+            });
+        }
+    } catch (error) {
+        console.error('Register error:', error);
+        return res.render('auth/register', {
+            pageTitle: 'Create Account — TaskManager',
+            errorMessage: 'Lỗi server! Không thể đăng ký.',
+            oldValues: { email, fullName }
+        });
+    }
+}
+// ...
+const userController = {
+    postCreateUser,
+    putEditUser,
+    getAllUsers,
+    getUserById,
+    deleteUser,
+    postLogin,
+    postLogOut,
+    postForgotPassword,
+    postVerifyForgotPassword,
+    getSearchUsersByUserName,
+    postRegister
+};
+
+export default userController

@@ -1,9 +1,11 @@
-import express from "express";
+﻿//import path from 'path'; // <--- Bổ sung
+//import { fileURLToPath } from 'url'; // <--- Bổ sung
+
+// Lấy đường dẫn tuyệt đối của thư mục chứa file hiện tại (src/config)
+//const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 let configViewEngine = (app) => {
-   app.use(express.static("./src/public"));
-   app.set("view engine", "ejs");
-   app.set("views", "./src/views");
+    app.set("view engine", "ejs");
 }
 
-module.exports = configViewEngine;
+export default configViewEngine;

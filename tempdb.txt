@@ -1,0 +1,137 @@
+-- Schema for MySQL (matches Sequelize models in src/models)
+-- Database from src/config/config.json: taskmanagement
+CREATE DATABASE IF NOT EXISTS `taskmanagement` CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+USE `taskmanagement`;
+
+-- Users (model: User)
+CREATE TABLE IF NOT EXISTS `Users` (
+  `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `userName` VARCHAR(255),
+  `email` VARCHAR(255),
+  `password` VARCHAR(255),
+  `fullName` VARCHAR(255),
+  `role` VARCHAR(255),
+  `token` VARCHAR(255),
+  `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Projects (model: Project)
+CREATE TABLE IF NOT EXISTS `Projects` (
+  `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `name` VARCHAR(255),
+  `description` TEXT,
+  `startDate` VARCHAR(255),
+  `endDate` VARCHAR(255),
+  `status` VARCHAR(255),
+  `createdBy` INT,
+  `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX (`createdBy`),
+  CONSTRAINT `fk_projects_createdBy_users`
+    FOREIGN KEY (`createdBy`) REFERENCES `Users`(`id`)
+    ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Tasks (model: Task)
+CREATE TABLE IF NOT EXISTS `Tasks` (
+  `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `projectId` INT,
+  `assignedTo` INT,
+  `title` VARCHAR(255),
+  `description` TEXT,
+  `status` VARCHAR(255),
+  `priority` VARCHAR(255),
+  `dueDate` VARCHAR(255),
+  `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX (`projectId`),
+  INDEX (`assignedTo`),
+  CONSTRAINT `fk_tasks_projectId_projects`
+    FOREIGN KEY (`projectId`) REFERENCES `Projects`(`id`)
+    ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_tasks_assignedTo_users`
+    FOREIGN KEY (`assignedTo`) REFERENCES `Users`(`id`)
+    ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Comments (model: comment)
+CREATE TABLE IF NOT EXISTS `comments` (
+  `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `taskId` INT NOT NULL,
+  `userId` INT,
+  `content` TEXT NOT NULL,
+  `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX (`taskId`),
+  INDEX (`userId`),
+  CONSTRAINT `fk_comments_taskId_tasks`
+    FOREIGN KEY (`taskId`) REFERENCES `Tasks`(`id`)
+    ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_comments_userId_users`
+    FOREIGN KEY (`userId`) REFERENCES `Users`(`id`)
+    ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Files (model: file)
+CREATE TABLE IF NOT EXISTS `files` (
+  `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `taskId` INT,
+  `filePath` TEXT,
+  -- model defines updatedAt as STRING, keep as VARCHAR to match model
+  `updatedAt` VARCHAR(255),
+  `uploadedBy` VARCHAR(255),
+  `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  INDEX (`taskId`),
+  CONSTRAINT `fk_files_taskId_tasks`
+    FOREIGN KEY (`taskId`) REFERENCES `Tasks`(`id`)
+    ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Project Members (model: projectMember)
+CREATE TABLE IF NOT EXISTS `projectMembers` (
+  `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `projectId` INT,
+  `userId` INT,
+  `role` VARCHAR(255),
+  `joinedAt` VARCHAR(255),
+  `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX (`projectId`),
+  INDEX (`userId`),
+  CONSTRAINT `fk_projectMembers_projectId_projects`
+    FOREIGN KEY (`projectId`) REFERENCES `Projects`(`id`)
+    ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_projectMembers_userId_users`
+    FOREIGN KEY (`userId`) REFERENCES `Users`(`id`)
+    ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Activity Logs (model: activityLog)
+CREATE TABLE IF NOT EXISTS `activityLogs` (
+  `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `userId` INT,
+  `action` VARCHAR(255),
+  `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX (`userId`),
+  CONSTRAINT `fk_activityLogs_userId_users`
+    FOREIGN KEY (`userId`) REFERENCES `Users`(`id`)
+    ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Task History (model: taskHistory)
+CREATE TABLE IF NOT EXISTS `taskHistories` (
+  `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `taskId` INT,
+  `changedBy` VARCHAR(255),
+  `changedField` VARCHAR(255),
+  `oldValue` TEXT,
+  `newValue` TEXT,
+  `createdAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updatedAt` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX (`taskId`),
+  CONSTRAINT `fk_taskHistories_taskId_tasks`
+    FOREIGN KEY (`taskId`) REFERENCES `Tasks`(`id`)
+    ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

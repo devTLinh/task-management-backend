@@ -1,8 +1,8 @@
-const { Sequelize } = require('sequelize');
+import { Sequelize } from 'sequelize';
 
-const sequelize = new Sequelize('taskmanagement', 'root', "123456", {
+const sequelize = new Sequelize('taskmanagement', 'root', "", {
    host: '127.0.0.1',
-   port: 3330,
+   port: 3306,
    dialect: 'mysql',
    logging: false
 });
@@ -16,4 +16,4 @@ let connectDB = async () => {
    }
 }
 
-module.exports = connectDB;
+export default connectDB;

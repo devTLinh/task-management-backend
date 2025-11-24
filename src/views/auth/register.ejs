@@ -1,0 +1,61 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= pageTitle || 'Register � TaskManager' %></title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="/assets/css/auth.css" />
+    <link rel="stylesheet" href="/assets/css/app.css" />
+    <script defer src="/assets/js/toast.js"></script>
+</head>
+<body>
+    <section class="auth">
+        <div class="auth__container">
+            <div class="auth__box">
+                <div class="auth__logo">
+                    <i class="fa-solid fa-layer-group"></i> TaskManager
+                </div>
+                <h2 class="auth__title">Create Your Account</h2>
+                <p class="auth__desc">Join TaskManager to plan, collaborate, and achieve more together.</p>
+
+                <% if (errorMessage) { %>
+                <div class="auth__error"><%= errorMessage %></div>
+                <% } %>
+
+                <form class="auth__form" method="POST" action="/register">
+
+                    <div class="auth__field">
+                        <label><i class="fa-solid fa-user"></i> Full Name</label>
+                        <input type="text" name="fullName" placeholder="John Doe"
+                               value="<%= oldValues.fullName || '' %>" required />
+                    </div>
+
+                    <div class="auth__field">
+                        <label><i class="fa-solid fa-envelope"></i> Email</label>
+                        <input type="email" name="email" placeholder="you@example.com"
+                               value="<%= oldValues.email || '' %>" required />
+                    </div>
+
+                    <div class="auth__field">
+                        <label><i class="fa-solid fa-lock"></i> Password</label>
+                        <input type="password" name="password" placeholder="********" required />
+                    </div>
+
+                    <button class="btn btn--primary" type="submit">Sign Up</button>
+                </form>
+
+                <p class="auth__switch">
+                    Already have an account?
+                    <a href="/login">Log in here</a>
+                </p>
+                <a href="/" class="auth__back">
+                    <i class="fa-solid fa-arrow-left"></i> Back to Home
+                </a>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
