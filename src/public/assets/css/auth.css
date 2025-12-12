@@ -148,7 +148,19 @@ body {
 .auth__back:hover {
   color: #059669;
 }
+.auth__forgot {
+    display: inline-block;
+    font-size: 0.9em; 
+    color: var(--color-text-secondary, #6b7280); 
+    text-decoration: none; 
+    margin-top: 10px; 
+    transition: color 0.2s ease;
+}
 
+    .auth__forgot:hover {
+        color: var(--color-primary, #0A9565);
+        text-decoration: underline;
+    }
 /* ===== ICON SPACING (Auth pages) ===== */
 /* Give Font Awesome icons a consistent gap from text in auth views */
 i.fa, i.fas, i.far, i.fab, i.fa-solid, i.fa-regular, i.fa-brands { margin-right: 8px; }

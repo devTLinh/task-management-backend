@@ -31,7 +31,7 @@
                 menu.setAttribute('aria-expanded', 'false');
             };
             const toggleMenu = (e) => {
-                if (e) e.preventDefault();
+                if (e) e.preventDefault();0
                 menu.classList.contains('profile--open') ? closeMenu() : openMenu();
             };
 
@@ -56,5 +56,4 @@
         }
 
     });
-
 })();

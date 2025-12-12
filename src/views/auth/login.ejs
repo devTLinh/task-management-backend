@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <link rel="stylesheet" href="/assets/css/auth.css" />
     <link rel="stylesheet" href="/assets/css/app.css" />
+    <link rel="stylesheet" href="/assets/css/login.css" />
     <script defer src="/assets/js/toast.js"></script>
 </head>
 <body>
@@ -19,19 +20,21 @@
                 <h2 class="auth__title">Welcome Back</h2>
                 <p class="auth__desc">Sign in to continue managing your projects and tasks efficiently.</p>
 
-                <% if (errorMessage) { %>
+                <div id="ajax-error-message-box"></div>
+
+                <% if (typeof errorMessage !== 'undefined' && errorMessage) { %>
                 <div class="auth__error"><%= errorMessage %></div>
                 <% } %>
 
-                <form class="auth__form" method="POST" action="/api/login">
+                <form id="loginForm" class="auth__form">
                     <div class="auth__field">
                         <label><i class="fa-solid fa-envelope"></i> Email</label>
-                        <input type="email" name="email" placeholder="you@example.com" required />
+                        <input type="email" name="email" id="email" placeholder="you@example.com" required />
                     </div>
 
                     <div class="auth__field">
                         <label><i class="fa-solid fa-lock"></i> Password</label>
-                        <input type="password" name="password" placeholder="*********" required />
+                        <input type="password" name="password" id="password" placeholder="*********" required />
                     </div>
 
                     <button class="btn btn--primary" type="submit">Log In</button>
@@ -41,24 +44,13 @@
                     Don't have an account?
                     <a href="/register">Create one</a>
                 </p>
-
-                <a href="/" class="auth__back">
-                    <i class="fa-solid fa-arrow-left"></i> Back to Home
+                <a href="/forgot-password" class="auth__forgot">
+                    Forgot Password?
                 </a>
             </div>
         </div>
     </section>
 
-    <script>
-        // Optional: frontend toast / message handling
-        (function () {
-            const form = document.querySelector('.auth__form');
-            if (form) {
-                form.addEventListener('submit', async function (e) {
-                    // You can add frontend validation or async fetch login here if needed
-                });
-            }
-        })();
-    </script>
+    <script defer src="/assets/js/login.js"></script>
 </body>
 </html>

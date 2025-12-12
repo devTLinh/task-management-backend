@@ -21,19 +21,20 @@ import db from '../models/index.js';
 
 let getHomePage = async(req, res) => {
     try {
-        // Biến `user` được truyền vào View. Nó sẽ là đối tượng người dùng 
+        // Biến `user` được truyền vào View. Nó sẽ là đối tượng người dùng
         // nếu đã đăng nhập (req.user), hoặc null nếu chưa đăng nhập.
-        const user = req.user || null; 
+        //const user = req.user || null;
 
         // 1. Loại bỏ db.User.findAll() vì Home View không cần hiển thị toàn bộ người dùng.
         // 2. Sử dụng res.render() để hiển thị file EJS.
+        console.log('home');
         return res.render('home/home', {
             // Biến 'title' hiển thị trên tab trình duyệt
             title: 'Welcome to TaskManager', 
             // Biến 'active' để highlight menu (nếu cần)
             active: 'home', 
             // Biến 'user' cho logic if/else trong View (để hiển thị nút Đăng nhập/Dashboard)
-            user: user, 
+            user: null, 
         });
 
     } catch (error) {

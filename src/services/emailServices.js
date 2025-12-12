@@ -1,4 +1,4 @@
-require('dotenv').config();
+//require('dotenv').config();
 const nodemailer = require('nodemailer');
 
 const sendEmailResetPassword = async (email, otp) => {
@@ -60,6 +60,7 @@ let sendEmailChangeStatusToUsers = async (title, users, status) => {
       let results = await Promise.all(emailPromises);
 
    } catch (error) {
+      console.error("LỖI THỰC TẾ TRONG USER SERVICE:", error); // <-- THÊM DÒNG NÀY
       console.log("Error from send Email change status!", error);
    }
 }

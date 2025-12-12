@@ -55,11 +55,11 @@ let postCreateUser = (data) => {
                   let hashedPassword = await hashValue(data.password);
                   // Create user
                   let newUser = await db.User.create({
-                     userName: data.userName,
-                     email: data.email,
-                     password: hashedPassword,
-                     fullName: data.fullName,
-                     role: data.role
+                     UserName: data.userName,
+                     Email: data.email,
+                     PasswordHash: hashedPassword,
+                     FullName: data.fullName,
+                     Role: data.role
                   });
 
                   resolve({
@@ -105,14 +105,14 @@ let putEditUser = (data) => {
                if(data.password) {
                   hashedPassword = await hashValue(data.password);
                } else {
-                  hashedPassword = user.password;
+                  hashedPassword = user.PasswordHash;
                }
 
                await db.User.update({
                   userName: data.userName,
                   email: data.email,
                   fullName: data.fullName,
-                  password: hashedPassword,
+                  PasswordHash: hashedPassword,
                   role: data.role
                }, {
                   where: {
@@ -256,14 +256,14 @@ let postLogin = (data) => {
                      errorMessage: 'User not found or email not exist !'
                   })
                } else {
-                  let checkPassword = bcrypt.compareSync(data.password, user.password);
+                   let checkPassword = bcrypt.compareSync(data.password, user.PasswordHash);
                   if (!checkPassword) {
                      resolve({
                         errorCode: 4,
                         errorMessage: 'Wrong password!'
                      })
                   } else {
-                     delete user.password;
+                     delete user.PasswordHash;
                      user.token = randomString(20);
                      const payload = {
                         email: user.email,
@@ -367,7 +367,7 @@ let postVerifyForgotPassword = (data) => {
                } else {
                   let hashedPassword = await hashValue(data.password);
                   await db.User.update({
-                     password: hashedPassword,
+                      PasswordHash: hashedPassword,
                      token: null
                   }, {
                      where: {

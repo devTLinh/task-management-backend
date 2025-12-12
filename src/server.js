@@ -13,6 +13,7 @@ import path from 'path';
 import { fileURLToPath } from 'url'; 
 import * as dotenv from 'dotenv'; // THAY THẾ require('dotenv').config()
 dotenv.config();
+//console.log('JWT_SECRET value:', process.env.JWT_SECRET);
 const __dirname = path.dirname(fileURLToPath(import.meta.url)); 
 //require('dotenv').config();
 
@@ -28,10 +29,10 @@ app.use(expressEjsLayouts); // <--- DÒNG BỔ SUNG 1
 // 2. CẤU HÌNH LAYOUT: Đặt file layout mặc định là master.ejs
 app.set('layout', 'layout/master'); // <--- DÒNG BỔ SUNG 2 (Đảm bảo đường dẫn đúng)
 
-console.log("Using layout:", app.get("layout"));
-console.log("Using view folder:", app.get("views"));
-console.log("Using public folder:", path.join(__dirname, 'public/assets'));
-console.log("EJS Layouts:", expressEjsLayouts);
+//console.log("Using layout:", app.get("layout"));
+//console.log("Using view folder:", app.get("views"));
+//console.log("Using public folder:", path.join(__dirname, 'public/assets'));
+//console.log("EJS Layouts:", expressEjsLayouts);
 
 app.use('/assets', express.static(path.join(__dirname, 'public/assets')));
 app.use(bodyParser.json());

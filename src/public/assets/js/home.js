@@ -16,7 +16,7 @@
 
     // 6b) Upgrade simple profile link (if present) to dropdown with logout
     (function(){
-      if (!isAuthed()) return;
+      //if (!isAuthed()) return;
       const container = document.querySelector('.header__actions');
       if (!container) return;
       const simple = container.querySelector('.profile');
@@ -184,8 +184,8 @@
         card.setAttribute('tabindex','0');
         card.addEventListener('click', () => {
           const href = links[idx] || 'home.html';
-          if (!isAuthed() && card.hasAttribute('data-auth')) { window.location.href='login.html'; return; }
-          window.location.href = href;
+          //if (!isAuthed() && card.hasAttribute('data-auth')) { window.location.href='login.html'; return; }
+          window.location.href = 'home.html';
         });
         card.addEventListener('keydown', (e)=>{ if (e.key==='Enter' || e.key===' ') { e.preventDefault(); card.click(); } });
         card.dataset.auth = 'required';

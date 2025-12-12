@@ -88,7 +88,12 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.ENUM('Admin', 'Manager', 'Member'),
       allowNull: false,
       defaultValue: 'Member'
-    },
+      },
+    token: {
+          type: DataTypes.STRING,
+          allowNull: true, // Phải là TRUE
+          defaultValue: null
+      },
     // CreatedAt: Định nghĩa thủ công
     CreatedAt: {
       type: DataTypes.DATE,

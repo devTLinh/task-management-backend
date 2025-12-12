@@ -42,7 +42,7 @@ let initWebRoutes = (app) => {
    router.post('/api/logout', userController.postLogOut);
    router.post('/api/forgot-password', userController.postForgotPassword);
    router.post('/api/verify-forgot-password', userController.postVerifyForgotPassword);
-    // Bổ sung Route GET để hiển thị trang đăng ký
+   router.post('/register', userController.postRegister);
    router.get('/register', (req, res) => {
         // Hiển thị form đăng ký
         return res.render('auth/register', {
@@ -52,8 +52,15 @@ let initWebRoutes = (app) => {
             layout: false
         });
    });
-    // Bổ sung Route POST để xử lý form đăng ký
-    router.post('/register', userController.postRegister);   // <--- Mới
+   router.get('/forgot-password', (req, res) => {
+        // Đảm bảo bạn có file auth/forgotPassword.ejs
+        return res.render('auth/forgot-password', {
+            pageTitle: 'Forgot Password — TaskManager',
+            layout: false, // Tắt layout chung vì đây là trang độc lập
+            oldValues: {},
+            errorMessage: null
+        });
+    });
 
    // API project
    // router.post('/api/create-project', projectController.postCreateProject);

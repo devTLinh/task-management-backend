@@ -17,31 +17,31 @@ module.exports = (app) => {
    )
    app.use(
       systemConfig.prefixPath + '/user',
-      authJwt,
-      requireRole(['Admin', 'Leader']),
+      //authJwt,
+      //requireRole(['Admin', 'Leader']),
       userRouter
    )
    app.use(
       systemConfig.prefixPath + '/project',
-      authJwt,
-      requireRole(['Admin', 'Leader']),
+      //authJwt,
+      //requireRole(['Admin', 'Leader']),
       projectRouter
    )
    app.use(
       systemConfig.prefixPath + '/task',
-      authJwt,
-      requireRole(['Admin', 'Leader']),
+      //authJwt,
+      //requireRole(['Admin', 'Leader']),
       taskRouter
    )
    app.use(
       systemConfig.prefixPath + '/comment',
-      authJwt,
+      //authJwt,
       commentRouter
    )
    app.use(
       systemConfig.prefixPath + '/project-member',
-      authJwt,
-      requireRole(['Admin', 'Leader']),
+      //authJwt,
+      //requireRole(['Admin', 'Leader']),
       projectMemberRouter
    )
    app.use(

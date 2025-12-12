@@ -66,26 +66,59 @@ let deleteUser = async (req, res) => {
    }
 }
 
+// userController.js - postLogin
+
 let postLogin = async (req, res) => {
-   try {
-      let response = await userServices.postLogin(req.body);
-      if(response && response.errorCode === 0) {
-         res.cookie("token", response.user.token, {
-            maxAge: 60*60*1000,
-            httpOnly: true,
-            secure: false
-         });
-         // delete response.user.token;
-      }
-      return res.status(200).json(response);
-   } catch (error) {
-      console.log(error);
-      return res.status(200).json({
-         errorCode: -1,
-         errorMessage: 'Error from the server! Contact Nguyen Quan'
-      })
-   }
+    try {
+        let response = await userServices.postLogin(req.body);
+
+        console.log('response login', response);
+
+        if (response && response.errorCode === 0) {
+            // Đặt Cookie JWT (Giả định response.user.token là JWT)
+            res.cookie("token", response.user.token, {
+                maxAge: 60 * 60 * 1000, // 1 giờ
+                httpOnly: true, // Bảo mật
+                secure: process.env.NODE_ENV === 'production'
+            });
+
+            delete response.user.token; // Xóa token khỏi JSON
+
+            // Trả về JSON thành công 
+            return res.status(200).json(response);
+        } else {
+            // Thất bại Logic (Mật khẩu sai, email không tồn tại)
+            return res.status(200).json(response);
+        }
+    } catch (error) {
+        // Lỗi Server
+        console.error(error);
+        return res.status(500).json({
+            errorCode: -1,
+            errorMessage: 'Error from the server! Please contact support.'
+        });
+    }
 }
+//let postLogin = async (req, res) => {
+//   try {
+//      let response = await userServices.postLogin(req.body);
+//      if(response && response.errorCode === 0) {
+//         res.cookie("token", response.user.token, {
+//            maxAge: 60*60*1000,
+//            httpOnly: true,
+//            secure: false
+//         });
+//         // delete response.user.token;
+//      }
+//      return res.status(200).json(response);
+//   } catch (error) {
+//      console.log(error);
+//      return res.status(200).json({
+//         errorCode: -1,
+//         errorMessage: 'Error from the server! Contact Nguyen Quan'
+//      })
+//   }
+//}
 
 let postLogOut = async (req, res) => {
    try {
@@ -109,7 +142,7 @@ let postForgotPassword = async (req, res) => {
       return res.status(200).json(data);
    } catch (error) {
       console.log(error);
-      return res.status(200).json({
+       return res.status(200).json({
          errorCode: -1,
          errorMessage: 'Error from the server! Contact Nguyen Quan'
       })
@@ -166,7 +199,8 @@ let postRegister = async (req, res) => {
             return res.render('auth/register', {
                 pageTitle: 'Create Account — TaskManager',
                 errorMessage: response.errorMessage || 'Đăng ký thất bại. Vui lòng thử lại.',
-                oldValues: { email, fullName }
+                oldValues: { email, fullName },
+                layout: false
             });
         }
     } catch (error) {
@@ -174,7 +208,8 @@ let postRegister = async (req, res) => {
         return res.render('auth/register', {
             pageTitle: 'Create Account — TaskManager',
             errorMessage: 'Lỗi server! Không thể đăng ký.',
-            oldValues: { email, fullName }
+            oldValues: { email, fullName },
+            layout: false
         });
     }
 }

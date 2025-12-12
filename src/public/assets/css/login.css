@@ -1,0 +1,11 @@
+﻿
+#ajax-error-message-box {
+    display: none; 
+    background-color: #fee2e2;
+    color: #dc2626;
+    padding: 10px;
+    border: 1px solid #fca5a5;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+}
