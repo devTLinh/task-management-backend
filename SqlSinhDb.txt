@@ -6,7 +6,8 @@ COLLATE utf8mb4_unicode_ci;
 USE taskmanagement;
 
 -- -----------------------------------------------------
--- 1. Bảng USERS (Người dùng)
+-- 1. Bảng USERS (Người dùng) - taskmanagement.users
+-- Khớp với hình ảnh, bao gồm cột 'token'
 -- -----------------------------------------------------
 CREATE TABLE Users (
     UserID INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -17,12 +18,14 @@ CREATE TABLE Users (
     Role ENUM('Admin', 'Manager', 'Member') NOT NULL DEFAULT 'Member',
     CreatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     UpdatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    token VARCHAR(255), -- Khớp với hình ảnh
     
     PRIMARY KEY (UserID)
 ) ENGINE=InnoDB;
 
 -- -----------------------------------------------------
--- 2. Bảng PROJECTS (Dự án)
+-- 2. Bảng PROJECTS (Dự án) - taskmanagement.projects
+-- Khớp với hình ảnh
 -- -----------------------------------------------------
 CREATE TABLE Projects (
     ProjectID INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -33,7 +36,7 @@ CREATE TABLE Projects (
     Status ENUM('Pending', 'InProgress', 'Completed', 'Cancelled') NOT NULL DEFAULT 'Pending',
     CreatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     UpdatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    CreatedBy INT UNSIGNED NOT NULL,
+    CreatedBy INT UNSIGNED NOT NULL, -- Khóa ngoại
     
     PRIMARY KEY (ProjectID),
     
@@ -44,7 +47,8 @@ CREATE TABLE Projects (
 ) ENGINE=InnoDB;
 
 -- -----------------------------------------------------
--- 3. Bảng PROJECTMEMBERS (Thành viên Dự án - Bảng liên kết nhiều-nhiều)
+-- 3. Bảng PROJECTMEMBERS (Thành viên Dự án) - taskmanagement.projectmembers
+-- Khớp với hình ảnh
 -- -----------------------------------------------------
 CREATE TABLE ProjectMembers (
     MemberID INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -70,7 +74,8 @@ CREATE TABLE ProjectMembers (
 ) ENGINE=InnoDB;
 
 -- -----------------------------------------------------
--- 4. Bảng TASKS (Công việc)
+-- 4. Bảng TASKS (Công việc) - taskmanagement.tasks
+-- Khớp với hình ảnh
 -- -----------------------------------------------------
 CREATE TABLE Tasks (
     TaskID INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -91,14 +96,15 @@ CREATE TABLE Tasks (
         ON DELETE CASCADE 
         ON UPDATE CASCADE,
         
-    -- Khóa ngoại: Công việc được giao cho ai
+    -- Khóa ngoại: Công việc được giao cho ai (AssignedTo có thể NULL)
     FOREIGN KEY (AssignedTo) REFERENCES Users(UserID)
         ON DELETE SET NULL 
         ON UPDATE CASCADE 
 ) ENGINE=InnoDB;
 
 -- -----------------------------------------------------
--- 5. Bảng COMMENTS (Bình luận)
+-- 5. Bảng COMMENTS (Bình luận) - taskmanagement.comments
+-- Khớp với hình ảnh
 -- -----------------------------------------------------
 CREATE TABLE Comments (
     CommentID INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -121,14 +127,15 @@ CREATE TABLE Comments (
 ) ENGINE=InnoDB;
 
 -- -----------------------------------------------------
--- 6. Bảng FILES (Tập tin đính kèm)
+-- 6. Bảng FILES (Tập tin đính kèm) - taskmanagement.files
+-- Khớp với hình ảnh, cột UploadedBy là khóa ngoại đến Users.UserID
 -- -----------------------------------------------------
 CREATE TABLE Files (
     FileID INT UNSIGNED NOT NULL AUTO_INCREMENT,
     TaskID INT UNSIGNED NOT NULL,
     FileName VARCHAR(255) NOT NULL,
     FilePath VARCHAR(512) NOT NULL,
-    UploadedBy INT UNSIGNED NOT NULL,
+    UploadedBy INT UNSIGNED NOT NULL, -- Khóa ngoại
     CreatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     
     PRIMARY KEY (FileID),
@@ -145,7 +152,8 @@ CREATE TABLE Files (
 ) ENGINE=InnoDB;
 
 -- -----------------------------------------------------
--- 7. Bảng TASKHISTORY (Lịch sử thay đổi Công việc)
+-- 7. Bảng TASKHISTORY (Lịch sử thay đổi Công việc) - taskmanagement.taskhistory
+-- Khớp với hình ảnh
 -- -----------------------------------------------------
 CREATE TABLE TaskHistory (
     HistoryID INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -170,7 +178,8 @@ CREATE TABLE TaskHistory (
 ) ENGINE=InnoDB;
 
 -- -----------------------------------------------------
--- 8. Bảng ACTIVITYLOGS (Nhật ký Hoạt động Chung)
+-- 8. Bảng ACTIVITYLOGS (Nhật ký Hoạt động Chung) - taskmanagement.activitylogs
+-- Khớp với hình ảnh
 -- -----------------------------------------------------
 CREATE TABLE ActivityLogs (
     LogID INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -180,7 +189,7 @@ CREATE TABLE ActivityLogs (
     
     PRIMARY KEY (LogID),
     
-    -- Khóa ngoại: Hành động được thực hiện bởi ai
+    -- Khóa ngoại: Hành động được thực hiện bởi ai (UserID có thể NULL)
     FOREIGN KEY (UserID) REFERENCES Users(UserID)
         ON DELETE SET NULL 
         ON UPDATE CASCADE 
