@@ -21,7 +21,7 @@ let postCreateTask = (data) => {
                })
             } else {
                let task = await db.Task.findOne({
-                  where: {title: data.title, assignedTo: data.assignedTo}
+                  where: {Title: data.title, AssignedTo: data.assignedTo}
                })
                if(task) {
                   resolve({
@@ -83,7 +83,7 @@ let getTaskByIdOrAssigntedTo = (data) => {
             let task = await db.Task.findOne({
                where: {
                   TaskID: id,
-                  assignedTo: assignedTo
+                  AssignedTo: assignedTo
                },
                include: [
                   { model: db.Project, attributes: ['Name', 'Description', 'Status', 'StartDate', 'EndDate'] },
@@ -124,7 +124,7 @@ let getTaskByIdOrAssigntedTo = (data) => {
             }
          } else if(assignedTo) {
             let tasks = await db.Task.findAll({
-               where: { assignedTo: assignedTo },
+               where: { AssignedTo: assignedTo },
                include: [
                    { model: db.Project, attributes: ['Name', 'Description', 'Status', 'StartDate', 'EndDate'] },
                    { model: db.User, as: 'Assignee', attributes: ['UserName', 'Email', 'FullName', 'Role'] }
@@ -229,17 +229,17 @@ let getSearchTaskByTitleStatus = (query) => {
          if(title && status) {
             whereCondition = {
                [Op.and]: [
-                  {title: {[Op.like]: `%${title}%`}},
-                  {status: {[Op.eq]: status}}
+                  {Title: {[Op.like]: `%${title}%`}},
+                  {Status: {[Op.eq]: status}}
                ]
             }
          } else if(title) {
             whereCondition = {
-               title: {[Op.like]: `%${title}%`}
+               Title: {[Op.like]: `%${title}%`}
             }
          } else if(status) {
             whereCondition = {
-               status: {[Op.eq]: status}
+               Status: {[Op.eq]: status}
             }
          }
 

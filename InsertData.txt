@@ -1,0 +1,200 @@
+INSERT INTO Users (UserID, UserName, Email, PasswordHash, FullName, Role, CreatedAt, UpdatedAt) VALUES
+-- 1 ADMIN
+(11, 'admin', 'admin@example.com', '$2b$10$uyn2aeY91ut7jKq2gtMrHu11beT8d6p6cvFoeowZpwggkLBAjNJbS', 'System Administrator', 'Admin', NOW(), NOW()),
+
+-- 4 MANAGERS
+(12, 'manager1', 'manager1@example.com', '$2b$10$uyn2aeY91ut7jKq2gtMrHu11beT8d6p6cvFoeowZpwggkLBAjNJbS', 'Manager One', 'Manager', NOW(), NOW()),
+(13, 'manager2', 'manager2@example.com', '$2b$10$uyn2aeY91ut7jKq2gtMrHu11beT8d6p6cvFoeowZpwggkLBAjNJbS', 'Manager Two', 'Manager', NOW(), NOW()),
+(14, 'manager3', 'manager3@example.com', '$2b$10$uyn2aeY91ut7jKq2gtMrHu11beT8d6p6cvFoeowZpwggkLBAjNJbS', 'Manager Three', 'Manager', NOW(), NOW()),
+(15, 'manager4', 'manager4@example.com', '$2b$10$uyn2aeY91ut7jKq2gtMrHu11beT8d6p6cvFoeowZpwggkLBAjNJbS', 'Manager Four', 'Manager', NOW(), NOW()),
+
+-- 20 MEMBERS
+(16, 'member1', 'member1@example.com', '$2b$10$uyn2aeY91ut7jKq2gtMrHu11beT8d6p6cvFoeowZpwggkLBAjNJbS', 'Member One', 'Member', NOW(), NOW()),
+(17, 'member2', 'member2@example.com', '$2b$10$uyn2aeY91ut7jKq2gtMrHu11beT8d6p6cvFoeowZpwggkLBAjNJbS', 'Member Two', 'Member', NOW(), NOW()),
+(18, 'member3', 'member3@example.com', '$2b$10$uyn2aeY91ut7jKq2gtMrHu11beT8d6p6cvFoeowZpwggkLBAjNJbS', 'Member Three', 'Member', NOW(), NOW()),
+(19, 'member4', 'member4@example.com', '$2b$10$uyn2aeY91ut7jKq2gtMrHu11beT8d6p6cvFoeowZpwggkLBAjNJbS', 'Member Four', 'Member', NOW(), NOW()),
+(20, 'member5', 'member5@example.com', '$2b$10$uyn2aeY91ut7jKq2gtMrHu11beT8d6p6cvFoeowZpwggkLBAjNJbS', 'Member Five', 'Member', NOW(), NOW()),
+(21, 'member6', 'member6@example.com', '$2b$10$uyn2aeY91ut7jKq2gtMrHu11beT8d6p6cvFoeowZpwggkLBAjNJbS', 'Member Six', 'Member', NOW(), NOW()),
+(22, 'member7', 'member7@example.com', '$2b$10$uyn2aeY91ut7jKq2gtMrHu11beT8d6p6cvFoeowZpwggkLBAjNJbS', 'Member Seven', 'Member', NOW(), NOW()),
+(23, 'member8', 'member8@example.com', '$2b$10$uyn2aeY91ut7jKq2gtMrHu11beT8d6p6cvFoeowZpwggkLBAjNJbS', 'Member Eight', 'Member', NOW(), NOW()),
+(24, 'member9', 'member9@example.com', '$2b$10$uyn2aeY91ut7jKq2gtMrHu11beT8d6p6cvFoeowZpwggkLBAjNJbS', 'Member Nine', 'Member', NOW(), NOW()),
+(25, 'member10', 'member10@example.com', '$2b$10$uyn2aeY91ut7jKq2gtMrHu11beT8d6p6cvFoeowZpwggkLBAjNJbS', 'Member Ten', 'Member', NOW(), NOW()),
+(26, 'member11', 'member11@example.com', '$2b$10$uyn2aeY91ut7jKq2gtMrHu11beT8d6p6cvFoeowZpwggkLBAjNJbS', 'Member Eleven', 'Member', NOW(), NOW()),
+(27, 'member12', 'member12@example.com', '$2b$10$uyn2aeY91ut7jKq2gtMrHu11beT8d6p6cvFoeowZpwggkLBAjNJbS', 'Member Twelve', 'Member', NOW(), NOW()),
+(28, 'member13', 'member13@example.com', '$2b$10$uyn2aeY91ut7jKq2gtMrHu11beT8d6p6cvFoeowZpwggkLBAjNJbS', 'Member Thirteen', 'Member', NOW(), NOW()),
+(29, 'member14', 'member14@example.com', '$2b$10$uyn2aeY91ut7jKq2gtMrHu11beT8d6p6cvFoeowZpwggkLBAjNJbS', 'Member Fourteen', 'Member', NOW(), NOW()),
+(30, 'member15', 'member15@example.com', '$2b$10$uyn2aeY91ut7jKq2gtMrHu11beT8d6p6cvFoeowZpwggkLBAjNJbS', 'Member Fifteen', 'Member', NOW(), NOW()),
+(31, 'member16', 'member16@example.com', '$2b$10$uyn2aeY91ut7jKq2gtMrHu11beT8d6p6cvFoeowZpwggkLBAjNJbS', 'Member Sixteen', 'Member', NOW(), NOW()),
+(32, 'member17', 'member17@example.com', '$2b$10$uyn2aeY91ut7jKq2gtMrHu11beT8d6p6cvFoeowZpwggkLBAjNJbS', 'Member Seventeen', 'Member', NOW(), NOW()),
+(33, 'member18', 'member18@example.com', '$2b$10$uyn2aeY91ut7jKq2gtMrHu11beT8d6p6cvFoeowZpwggkLBAjNJbS', 'Member Eighteen', 'Member', NOW(), NOW()),
+(34, 'member19', 'member19@example.com', '$2b$10$uyn2aeY91ut7jKq2gtMrHu11beT8d6p6cvFoeowZpwggkLBAjNJbS', 'Member Nineteen', 'Member', NOW(), NOW()),
+(35, 'member20', 'member20@example.com', '$2b$10$uyn2aeY91ut7jKq2gtMrHu11beT8d6p6cvFoeowZpwggkLBAjNJbS', 'Member Twenty', 'Member', NOW(), NOW());
+//project
+INSERT INTO Projects (ProjectID, Name, Description, StartDate, EndDate, Status, CreatedBy, CreatedAt, UpdatedAt) VALUES
+(2, 'Project Alpha', 'Initial planning and setup.', '2025-01-01', '2025-03-01', 'Pending', 11, NOW(), NOW()),
+(3, 'Project Beta', 'Development of core features.', '2025-01-15', '2025-04-15', 'InProgress', 11, NOW(), NOW()),
+(4, 'Project Gamma', 'Testing and QA cycles.', '2025-02-01', '2025-05-01', 'Pending', 11, NOW(), NOW()),
+(5, 'Project Delta', 'UI/UX redesign and improvements.', '2025-02-10', '2025-06-10', 'InProgress', 11, NOW(), NOW()),
+(6, 'Project Epsilon', 'API integration and backend upgrades.', '2025-03-01', '2025-07-01', 'Completed', 11, NOW(), NOW()),
+(7, 'Project Zeta', 'Mobile app development.', '2025-03-15', '2025-08-15', 'Pending', 11, NOW(), NOW()),
+(8, 'Project Eta', 'Security audit and patching.', '2025-04-01', '2025-06-01', 'Cancelled', 11, NOW(), NOW()),
+(9, 'Project Theta', 'Performance optimization.', '2025-04-10', '2025-07-10', 'InProgress', 11, NOW(), NOW()),
+(10, 'Project Iota', 'Database migration.', '2025-05-01', '2025-08-01', 'Pending', 11, NOW(), NOW()),
+(11, 'Project Kappa', 'New feature rollout.', '2025-05-15', '2025-09-15', 'Completed', 11, NOW(), NOW()),
+(12, 'Project Lambda', 'Internal tool development.', '2025-06-01', '2025-10-01', 'Pending', 11, NOW(), NOW()),
+(13, 'Project Mu', 'Customer feedback improvements.', '2025-06-10', '2025-09-10', 'InProgress', 11, NOW(), NOW()),
+(14, 'Project Nu', 'Marketing automation system.', '2025-07-01', '2025-11-01', 'Pending', 11, NOW(), NOW()),
+(15, 'Project Xi', 'Cloud infrastructure upgrade.', '2025-07-15', '2025-12-15', 'InProgress', 11, NOW(), NOW()),
+(16, 'Project Omicron', 'AI assistant integration.', '2025-08-01', '2025-12-01', 'Pending', 11, NOW(), NOW()),
+(17, 'Project Pi', 'User analytics dashboard.', '2025-08-10', '2025-12-20', 'Completed', 11, NOW(), NOW());
+//project-member
+INSERT INTO ProjectMembers (ProjectID, UserID, Role, JoinedAt) VALUES
+(2, 11, 'ProjectManager', NOW()),
+(2, 16, 'Developer', NOW()),
+(3, 12, 'ProjectManager', NOW()),
+(3, 17, 'Developer', NOW()),
+(4, 13, 'TeamLead', NOW()),
+(4, 18, 'Developer', NOW()),
+(5, 14, 'ProjectManager', NOW()),
+(5, 19, 'Viewer', NOW()),
+(6, 15, 'TeamLead', NOW()),
+(6, 20, 'Developer', NOW()),
+(7, 21, 'Developer', NOW()),
+(8, 22, 'Developer', NOW()),
+(9, 23, 'TeamLead', NOW()),
+(10, 24, 'Developer', NOW()),
+(11, 25, 'Viewer', NOW()),
+(12, 26, 'Developer', NOW()),
+(13, 27, 'Developer', NOW()),
+(14, 28, 'TeamLead', NOW()),
+(15, 29, 'Developer', NOW()),
+(16, 30, 'Developer', NOW());
+//task
+INSERT INTO Tasks (ProjectID, AssignedTo, Title, Description, Status, Priority, DueDate, CreatedAt, UpdatedAt) VALUES
+-- Project 2
+(2, 16, 'Setup project structure', 'Initialize folder structure and configs.', 'ToDo', 'Medium', '2025-02-01', NOW(), NOW()),
+(2, 17, 'Define requirements', 'Gather and document requirements.', 'InProgress', 'High', '2025-02-10', NOW(), NOW()),
+(2, 18, 'Create wireframes', 'Design UI wireframes.', 'InReview', 'Medium', '2025-02-15', NOW(), NOW()),
+
+-- Project 3
+(3, 12, 'Develop authentication', 'Implement login and register.', 'InProgress', 'High', '2025-03-05', NOW(), NOW()),
+(3, 19, 'Setup database schema', 'Create tables and relations.', 'Done', 'Medium', '2025-02-20', NOW(), NOW()),
+(3, 20, 'API documentation', 'Write API docs.', 'ToDo', 'Low', '2025-03-10', NOW(), NOW()),
+
+-- Project 4
+(4, 21, 'Write unit tests', 'Add tests for core modules.', 'ToDo', 'Medium', '2025-03-15', NOW(), NOW()),
+(4, 22, 'Fix reported bugs', 'Resolve issues from QA.', 'InProgress', 'Urgent', '2025-03-12', NOW(), NOW()),
+(4, 23, 'Optimize performance', 'Improve API response time.', 'Blocked', 'High', '2025-03-20', NOW(), NOW()),
+
+-- Project 5
+(5, 14, 'UI redesign', 'Update UI components.', 'InReview', 'Medium', '2025-04-01', NOW(), NOW()),
+(5, 24, 'Implement dark mode', 'Add theme switching.', 'ToDo', 'Low', '2025-04-10', NOW(), NOW()),
+(5, 25, 'Accessibility improvements', 'Improve accessibility compliance.', 'Done', 'Medium', '2025-03-25', NOW(), NOW()),
+
+-- Project 6
+(6, 26, 'Backend refactor', 'Refactor old modules.', 'InProgress', 'High', '2025-04-15', NOW(), NOW()),
+(6, 27, 'Add logging system', 'Implement logging middleware.', 'ToDo', 'Medium', '2025-04-20', NOW(), NOW()),
+(6, 28, 'Security audit', 'Check vulnerabilities.', 'InReview', 'Urgent', '2025-04-18', NOW(), NOW()),
+
+-- Project 7
+(7, 29, 'Mobile layout fixes', 'Fix responsive issues.', 'Done', 'Low', '2025-05-01', NOW(), NOW()),
+(7, 30, 'Push notification system', 'Implement notifications.', 'InProgress', 'High', '2025-05-10', NOW(), NOW()),
+(7, 31, 'App store preparation', 'Prepare metadata and screenshots.', 'ToDo', 'Medium', '2025-05-15', NOW(), NOW()),
+
+-- Project 8
+(8, 32, 'Security patching', 'Apply latest patches.', 'Blocked', 'Urgent', '2025-05-20', NOW(), NOW()),
+(8, 33, 'Penetration testing', 'Perform security tests.', 'InProgress', 'High', '2025-05-25', NOW(), NOW()),
+(8, 34, 'Generate security report', 'Document findings.', 'ToDo', 'Medium', '2025-06-01', NOW(), NOW()),
+
+-- Project 9
+(9, 35, 'Optimize queries', 'Improve DB query performance.', 'InProgress', 'High', '2025-06-10', NOW(), NOW()),
+(9, 16, 'Cache layer implementation', 'Add Redis caching.', 'ToDo', 'Medium', '2025-06-15', NOW(), NOW()),
+(9, 17, 'Load testing', 'Perform load tests.', 'InReview', 'High', '2025-06-20', NOW(), NOW()),
+
+-- Project 10
+(10, 18, 'Plan migration steps', 'Define migration phases.', 'Done', 'Low', '2025-06-05', NOW(), NOW()),
+(10, 19, 'Backup database', 'Create full DB backup.', 'ToDo', 'Medium', '2025-06-08', NOW(), NOW()),
+(10, 20, 'Migrate data', 'Move data to new schema.', 'InProgress', 'Urgent', '2025-06-12', NOW(), NOW()),
+
+-- Project 11
+(11, 21, 'Feature rollout plan', 'Plan release schedule.', 'ToDo', 'Medium', '2025-07-01', NOW(), NOW()),
+(11, 22, 'Implement feature flags', 'Add toggle system.', 'InProgress', 'High', '2025-07-05', NOW(), NOW()),
+(11, 23, 'Monitor rollout', 'Track user feedback.', 'InReview', 'Medium', '2025-07-10', NOW(), NOW()),
+
+-- Project 12
+(12, 24, 'Internal tool UI', 'Build UI for internal tool.', 'InProgress', 'Medium', '2025-07-20', NOW(), NOW()),
+(12, 25, 'Automation scripts', 'Write automation scripts.', 'ToDo', 'Low', '2025-07-25', NOW(), NOW()),
+(12, 26, 'Deploy internal tool', 'Deploy to internal server.', 'Done', 'Medium', '2025-07-30', NOW(), NOW()),
+
+-- Project 13
+(13, 27, 'Collect feedback', 'Gather customer feedback.', 'ToDo', 'Low', '2025-08-05', NOW(), NOW()),
+(13, 28, 'Implement improvements', 'Apply suggested changes.', 'InProgress', 'High', '2025-08-10', NOW(), NOW()),
+(13, 29, 'Review improvements', 'QA review.', 'InReview', 'Medium', '2025-08-15', NOW(), NOW()),
+
+-- Project 14
+(14, 30, 'Marketing automation setup', 'Configure automation tools.', 'ToDo', 'Medium', '2025-08-20', NOW(), NOW()),
+(14, 31, 'Email campaign design', 'Design email templates.', 'InProgress', 'High', '2025-08-25', NOW(), NOW()),
+(14, 32, 'Campaign analytics', 'Analyze campaign results.', 'Done', 'Low', '2025-08-30', NOW(), NOW());
+//comment
+INSERT INTO Comments (TaskID, UserID, Content, CreatedAt) VALUES
+(1, 16, 'Started working on the initial setup.', NOW()),
+(1, 17, 'Reviewed the folder structure, looks good.', NOW()),
+(2, 18, 'Requirements document updated with new details.', NOW()),
+(2, 19, 'Please confirm the API endpoints.', NOW()),
+(3, 20, 'Wireframes uploaded for review.', NOW()),
+(3, 21, 'UI looks clean, approved.', NOW()),
+
+(4, 12, 'Authentication module is halfway done.', NOW()),
+(4, 17, 'Added validation for login form.', NOW()),
+(5, 19, 'Database schema finalized.', NOW()),
+(5, 20, 'Indexes added for performance.', NOW()),
+(6, 21, 'API documentation draft created.', NOW()),
+
+(7, 22, 'Unit tests added for core services.', NOW()),
+(7, 23, 'Found a few failing tests, fixing now.', NOW()),
+(8, 24, 'Bug list updated after QA testing.', NOW()),
+(8, 25, 'Critical bug found in payment module.', NOW()),
+(9, 26, 'Performance metrics collected.', NOW()),
+
+(10, 14, 'UI redesign proposal uploaded.', NOW()),
+(10, 27, 'Dark mode color palette approved.', NOW()),
+(11, 25, 'Accessibility issues resolved.', NOW()),
+(11, 28, 'Screen reader support added.', NOW()),
+(12, 29, 'Backend refactor started.', NOW()),
+
+(13, 30, 'Logging middleware implemented.', NOW()),
+(13, 31, 'Added error tracking integration.', NOW()),
+(14, 32, 'Security audit in progress.', NOW()),
+(14, 33, 'Found vulnerabilities in auth flow.', NOW()),
+(15, 34, 'Mobile layout fixed for iPhone.', NOW()),
+
+(16, 35, 'Push notification prototype ready.', NOW()),
+(16, 16, 'Testing notifications on Android.', NOW()),
+(17, 17, 'App store metadata drafted.', NOW()),
+(17, 18, 'Screenshots uploaded.', NOW()),
+(18, 19, 'Security patches applied.', NOW()),
+
+(19, 20, 'Penetration test results uploaded.', NOW()),
+(19, 21, 'Need to fix SQL injection risk.', NOW()),
+(20, 22, 'Security report draft created.', NOW()),
+(20, 23, 'Added missing sections.', NOW()),
+(21, 24, 'Query optimization completed.', NOW()),
+
+(22, 25, 'Redis caching implemented.', NOW()),
+(22, 26, 'Load testing scripts prepared.', NOW()),
+(23, 27, 'Migration plan approved.', NOW()),
+(23, 28, 'Database backup completed.', NOW()),
+(24, 29, 'Data migration started.', NOW()),
+
+(25, 30, 'Feature rollout plan drafted.', NOW()),
+(25, 31, 'Feature flags implemented.', NOW()),
+(26, 32, 'Monitoring dashboard updated.', NOW()),
+(26, 33, 'User feedback collected.', NOW()),
+(27, 34, 'Internal tool UI completed.', NOW()),
+
+(28, 35, 'Automation scripts tested.', NOW()),
+(28, 16, 'Deployment successful.', NOW()),
+(29, 17, 'Customer feedback summarized.', NOW()),
+(29, 18, 'Improvements applied.', NOW()),
+(30, 19, 'QA review completed.', NOW());
+

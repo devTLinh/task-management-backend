@@ -72,7 +72,7 @@ let getAllComments = (query) => {
                TaskID: taskId
             }
          }
-         let data = await db.comment.findAll({
+          let data = await db.Comment.findAll({
             where: whereCondition,
             include: [
                {

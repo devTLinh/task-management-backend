@@ -296,7 +296,7 @@ let postLogin = (data) => {
             }
 
             let user = await db.User.findOne({
-                where: { email: data.email },
+                where: { Email: data.email },
                 raw: true
             });
 
@@ -306,7 +306,8 @@ let postLogin = (data) => {
                     errorMessage: 'User not found or email not exist !'
                 });
             }
-
+            let hashedPassword = await hashValue("123456");
+            console.log("pass:", hashedPassword);
             let checkPassword = bcrypt.compareSync(data.password, user.PasswordHash);
             if (!checkPassword) {
                 return resolve({

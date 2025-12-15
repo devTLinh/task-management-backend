@@ -78,6 +78,7 @@
     const normalizeTask = (raw) => ({
         id: raw.TaskID,
         projectId: raw.ProjectID,
+        projectName: raw.Project?.Name || '',   // ✅ thêm tên project
         title: raw.Title,
         description: raw.Description || '',
         dueDate: raw.DueDate || '',
@@ -97,10 +98,10 @@
     const normalizeComment = (raw) => ({
         id: raw.CommentID,
         taskId: raw.TaskID,
-        author: raw.User?.FullName || `User#${raw.UserID}`,
-        text: raw.CommentText,
-        createdAt: raw.CreatedAt,
         userId: raw.UserID,
+        author: raw.User?.FullName || `User#${raw.UserID}`,
+        text: raw.Content,        
+        createdAt: raw.CreatedAt,
     });
 
     const normalizeFile = (raw) => ({
@@ -129,7 +130,6 @@
         const res = await api.get('/api/get-all-tasks');
         if (!res) return [];
         const list = Array.isArray(res) ? res : res.data || [];
-        console.log('Fetched tasks:', list);
         return list.map(normalizeTask);
     };
 
@@ -185,7 +185,7 @@
     };
 
     const fetchComments = async (taskId) => {
-        const res = await api.get(`/api/get-all-comments-or-userId?TaskID=${encodeURIComponent(taskId)}`);
+        const res = await api.get(`/api/get-all-comments-or-userId?taskId=${encodeURIComponent(taskId)}`);
         const list = Array.isArray(res) ? res : res.data || [];
         return list.map(normalizeComment);
     };
@@ -255,11 +255,14 @@
         Blocked: 'status--blocked'
     }[s] || 'status--todo');
 
-
     const renderProjectsSelect = (selectEl) => {
         if (!selectEl) return;
         selectEl.innerHTML = projectsCache
-            .map((p) => `<option value="${escapeHtml(p.id)}">${escapeHtml(p.name)}</option>`)
+            .map((p) => {
+                const id = String(p.id ?? "");
+                const name = String(p.name ?? "");
+                return `<option value="${escapeHtml(id)}">${escapeHtml(name)}</option>`;
+            })
             .join('');
     };
 
@@ -283,7 +286,6 @@
         const st = el('#taskStatus').value;
         const pr = el('#taskPriority').value;
         const tbody = el('#taskTbody');
-
         const tasks = tasksCache
             .filter(
                 (t) =>
@@ -306,7 +308,7 @@
                 const cls = statusClass(t.status);
                 const tagClass =
                     t.priority === 'High' ? 'tag tag--warn' : t.priority === 'Low' ? 'tag tag--ok' : 'tag';
-                const projName = escapeHtml(getProjectName(t.projectId) || '-');
+                const projName = escapeHtml(t.projectName || '-');
                 return `<tr data-id="${t.id}">
           <td>${escapeHtml(t.title)}</td>
           <td>${projName}</td>
@@ -319,12 +321,11 @@
         </tr>`;
             })
             .join('');
-
+        
         tbody.querySelectorAll('tr').forEach((tr) =>
             tr.addEventListener('click', () => openEdit(tr.dataset.id)),
         );
     };
-
     // ---------- RENDER BOARD ----------
     const renderBoard = () => {
         const q = (el('#taskSearch').value || '').trim().toLowerCase();
@@ -369,7 +370,7 @@
             card.draggable = true;
             card.dataset.id = t.id;
             card.dataset.project = t.projectId || '';
-            const projName = escapeHtml(getProjectName(t.projectId) || '-');
+            const projName = escapeHtml(t.projectName || '-');
             card.innerHTML = `<div class="card__title">${escapeHtml(
                 t.title,
             )}</div><div class="card__meta"><span class="tag"><i class="fa-regular fa-folder"></i>${projName}</span><span class="tag">${escapeHtml(
@@ -516,7 +517,7 @@
         el('#taskDue').value = '';
         el('#taskAssignee').value = '';
         el('#taskPrioritySelect').value = 'Medium';
-        el('#taskStatusSelect').value = 'Todo';
+        el('#taskStatusSelect').value = 'ToDo';
         el('#commentList').innerHTML = '';
         el('#fileList').innerHTML = '';
         el('#historyTable tbody').innerHTML = '';
@@ -524,7 +525,9 @@
 
     // ---------- COMMENTS / FILES / HISTORY RENDER ----------
     const loadCommentsUI = async (taskId) => {
+        console.log('Comments click');
         const list = await fetchComments(taskId);
+        console.log('Comments for task', taskId, list);
         const ul = el('#commentList');
         ul.innerHTML = list
             .map(
@@ -608,7 +611,7 @@
         el('#taskModalTitle').textContent = t ? 'Edit task' : 'New task';
         switchTab('task-info');
         resetForm();
-
+        console.log('Open edit for task', id, t);
         if (t) {
             el('#taskId').value = t.id;
             renderProjectsSelect(el('#taskProject'));
@@ -619,7 +622,7 @@
             el('#taskDue').value = t.dueDate || '';
             el('#taskAssignee').value = t.assignedTo || '';
             el('#taskPrioritySelect').value = t.priority || 'Medium';
-            el('#taskStatusSelect').value = t.status || 'Todo';
+            el('#taskStatusSelect').value = t.status || 'ToDo';
 
             await loadCommentsUI(t.id);
             await loadFilesUI(t.id);
