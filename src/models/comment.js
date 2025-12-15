@@ -1,28 +1,37 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class comment extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      // define association here
-      // Project.belongsTo(models.User, {foreignKey: 'createdBy', targetKey: 'id', as: 'creatorInfo'})
-      comment.belongsTo(models.User, {foreignKey: 'userId', targetKey: 'id', as: 'userInfoComment'})
-      comment.belongsTo(models.Task, {foreignKey: 'taskId', targetKey: 'id', as: 'taskInfo'})
-    }
-  }
-  comment.init({
-    taskId: DataTypes.INTEGER,
-    userId: DataTypes.INTEGER,
-    content: DataTypes.TEXT
-  }, {
-    sequelize,
-    modelName: 'comment',
-  });
-  return comment;
+    const Comment = sequelize.define('Comment', {
+        CommentID: {
+            type: DataTypes.INTEGER.UNSIGNED,
+            primaryKey: true,
+            autoIncrement: true,
+            allowNull: false
+        },
+        TaskID: {
+            type: DataTypes.INTEGER.UNSIGNED,
+            allowNull: false
+        },
+        UserID: {
+            type: DataTypes.INTEGER.UNSIGNED,
+            allowNull: false
+        },
+        Content: {
+            type: DataTypes.TEXT,
+            allowNull: false
+        },
+        CreatedAt: {
+            type: DataTypes.DATE,
+            allowNull: false,
+            defaultValue: DataTypes.NOW
+        },
+    }, {
+        tableName: 'Comments',
+        timestamps: false
+    });
+
+    Comment.associate = (models) => {
+        Comment.belongsTo(models.Task, { foreignKey: 'TaskID', targetKey: 'TaskID' });
+        Comment.belongsTo(models.User, { foreignKey: 'UserID', targetKey: 'UserID' });
+    };
+
+    return Comment;
 };

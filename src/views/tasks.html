@@ -1,0 +1,216 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tasks — TaskManager</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="./assets/css/home.css" />
+  <link rel="stylesheet" href="./assets/css/app.css" />
+  <script defer src="./assets/js/app.js"></script>
+  <script defer src="./assets/js/toast.js"></script></head>
+<body>
+  <header class="header">
+    <div class="header__logo"><i class="fa-solid fa-layer-group header__logo-icon"></i><span class="header__logo-text">TaskManager</span></div>
+    <nav class="header__nav">
+      <a href="/home" class="header__nav-link"><i class="fa-solid fa-house"></i> Home</a>
+      <a href="/projects" class="header__nav-link"><i class="fa-solid fa-diagram-project"></i> Projects</a>
+      <a href="/tasks" class="header__nav-link"><i class="fa-solid fa-list-check"></i> Tasks</a>
+      <a href="/users" class="header__nav-link"><i class="fa-solid fa-users"></i> Users</a>
+      <a href="/reports" class="header__nav-link"><i class="fa-solid fa-chart-line"></i> Reports</a>
+    </nav>
+    <div class="header__actions">
+      <a href="home.html" class="btn btn--white"><i class="fa-solid fa-arrow-left"></i> Back</a>
+    </div>
+  </header>
+
+  <main class="page container page--tasks">
+    <h1 class="page__title"><i class="fa-solid fa-list-check"></i> Tasks</h1>
+    <p class="page__desc">Task list with quick filter.</p>
+
+    <div class="filters">
+      <div class="view-toggle" role="tablist" aria-label="Task view">
+        <button id="viewTable" class="view-toggle__btn view-toggle__btn--active" role="tab" aria-selected="true"><i class="fa-solid fa-table"></i> Table</button>
+        <button id="viewBoard" class="view-toggle__btn" role="tab" aria-selected="false"><i class="fa-solid fa-columns"></i> Board</button>
+      </div>
+      <input id="taskSearch" type="text" placeholder="Search tasks..." />
+      <select id="taskStatus">
+        <option value="all">All status</option>
+        <option value="Todo">Todo</option>
+        <option value="InProgress">In Progress</option>
+        <option value="Review">Review</option>
+        <option value="Done">Done</option>
+      </select>
+      <select id="taskPriority">
+        <option value="all">All priority</option>
+        <option value="Low">Low</option>
+        <option value="Medium">Medium</option>
+        <option value="High">High</option>
+      </select>
+      <button id="btnNewTask" class="btn btn--primary"><i class="fa-solid fa-plus"></i> New Task</button>
+    </div>
+
+    <table class="table" id="taskTable">
+      <thead>
+        <tr>
+          <th>Task</th>
+          <th>Project</th>
+          <th>Assignee</th>
+          <th>Due</th>
+          <th id="thPriority" data-sort="priority" style="cursor:pointer">Priority</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="taskTbody"></tbody>
+    </table>
+
+    <!-- Kanban board view -->
+    <section class="board board--tasks" id="taskBoard" hidden>
+      <div class="board__column" data-col="Todo">
+        <div class="board__title"><i class="fa-regular fa-square"></i> Todo</div>
+        <div class="board__list" id="col-todo"></div>
+      </div>
+      <div class="board__column" data-col="InProgress">
+        <div class="board__title"><i class="fa-solid fa-spinner"></i> In Progress</div>
+        <div class="board__list" id="col-inprogress"></div>
+      </div>
+      <div class="board__column" data-col="Review">
+        <div class="board__title"><i class="fa-regular fa-eye"></i> Review</div>
+        <div class="board__list" id="col-review"></div>
+      </div>
+      <div class="board__column" data-col="Done">
+        <div class="board__title"><i class="fa-solid fa-check"></i> Done</div>
+        <div class="board__list" id="col-done"></div>
+      </div>
+      <div class="board__column" data-col="Done">
+          <div class="board__title"><i class="fa-solid fa-check"></i> Blocked</div>
+          <div class="board__list" id="col-done"></div>
+      </div>
+    </section>
+  </main>
+  
+  <footer class="footer">
+    <div class="footer__container">
+      <div class="footer__col footer__about">
+        <h3>TaskManager</h3>
+        <p>The ultimate workspace for managing projects, tracking tasks, and empowering teamwork.</p>
+      </div>
+      <div class="footer__col footer__links">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="/home" class="footer__link">Home</a></li>
+          <li><a href="/projects" class="footer__link" data-auth="required">Projects</a></li>
+          <li><a href="/tasks" class="footer__link" data-auth="required">Tasks</a></li>
+          <li><a href="/reports" class="footer__link" data-auth="required">Reports</a></li>
+        </ul>
+      </div>
+      <div class="footer__col footer__contact">
+        <h4>Contact</h4>
+        <p>Email: support@taskmanager.com</p>
+        <p>Phone: +84 123 456 789</p>
+        <div class="footer__social">
+          <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#"><i class="fa-brands fa-twitter"></i></a>
+          <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+          <a href="#"><i class="fa-brands fa-github"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <p>&copy; 2025 TaskManager | Designed by <strong>Pham Canh Lam</strong></p>
+    </div>
+  </footer>
+  
+  <!-- Task Modal -->
+  <div class="modal" id="taskModal" aria-hidden="true">
+    <div class="modal__overlay" data-close></div>
+    <div class="modal__content" role="dialog" aria-modal="true" aria-labelledby="taskModalTitle">
+      <h3 id="taskModalTitle">New task</h3>
+      <div class="tabs">
+        <button class="tab tab--active" data-tab="task-info">Info</button>
+        <button class="tab" data-tab="task-comments">Comments</button>
+        <button class="tab" data-tab="task-files">Files</button>
+        <button class="tab" data-tab="task-history">History</button>
+      </div>
+      <div class="tabpanes">
+        <form id="taskForm" class="modal__form tabpane tabpane--active" data-pane="task-info">
+          <input type="hidden" id="taskId" />
+          <label>Project
+            <select id="taskProject"></select>
+          </label>
+          <label>Title
+            <input type="text" id="taskTitle" placeholder="Task title" required />
+          </label>
+          <label>Description
+            <textarea id="taskDesc" rows="3" placeholder="Describe the task..."></textarea>
+          </label>
+          <div class="row-2">
+            <label>Due date
+              <input type="date" id="taskDue" />
+            </label>
+            <label>Assignee
+              <select id="taskAssignee"></select>
+            </label>
+          </div>
+          <div class="row-2">
+            <label>Priority
+              <select id="taskPrioritySelect">
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+              </select>
+            </label>
+            <label>Status
+                <select id="taskStatusSelect">
+                    <option value="ToDo">ToDo</option>
+                    <option value="InProgress">InProgress</option>
+                    <option value="InReview">InReview</option>
+                    <option value="Done">Done</option>
+                    <option value="Blocked">Blocked</option>
+                </select>
+            </label>
+          </div>
+          <div class="modal__actions">
+            <button type="button" class="btn btn--white" data-close>Cancel</button>
+            <button type="button" id="btnDeleteTask" class="btn btn--white">Delete</button>
+            <button type="submit" class="btn btn--primary">Save</button>
+          </div>
+        </form>
+
+        <div class="tabpane" data-pane="task-comments">
+          <div class="filters">
+            <input type="text" id="commentText" placeholder="Write a comment" style="flex:1" />
+            <button class="btn btn--primary" id="btnAddComment"><i class="fa-regular fa-comment"></i> Add</button>
+          </div>
+          <ul class="comments__list" id="commentList"></ul>
+        </div>
+
+        <div class="tabpane" data-pane="task-files">
+          <div class="filters">
+            <input type="file" id="fileInput" />
+            <button class="btn btn--primary" id="btnUploadFile"><i class="fa-solid fa-upload"></i> Upload</button>
+          </div>
+          <ul class="files__list" id="fileList"></ul>
+        </div>
+
+        <div class="tabpane" data-pane="task-history">
+          <table class="table" id="historyTable">
+            <thead>
+              <tr>
+                <th>When</th>
+                <th>By</th>
+                <th>Field</th>
+                <th>Old</th>
+                <th>New</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script defer src="./assets/js/tasks.js"></script>
+</body>
+</html>

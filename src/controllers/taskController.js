@@ -77,7 +77,18 @@ let patchChangeStatusTaskById = async (req, res) => {
       })
    }
 }
-
+let putUpdateTask = async (req, res) => {
+    try {
+        let data = await taskServices.putUpdateTask(req.query);
+        return res.status(200).json(data);
+    } catch (error) {
+        console.log(error);
+        return res.status(200).json({
+            errorCode: -1,
+            errorMessage: 'Error from server! Contact Nguyen Quan'
+        })
+    }
+}
 let getAllTaskByProjectId = async (req, res) => {
    try {
       let data = await taskServices.getAllTaskByProjectId(req.query.projectId);
@@ -98,5 +109,6 @@ module.exports = {
    deleteTaskById,
    getSearchTaskByTitleStatus,
    patchChangeStatusTaskById,
-   getAllTaskByProjectId,
+    getAllTaskByProjectId,
+    putUpdateTask
 }

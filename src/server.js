@@ -3,10 +3,11 @@ import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 import cors from 'cors';
 import viewEngine from "./config/viewEngine";
-// import initWebRoutes from "./route/web";
+import initWebRoutes from "./route/web";
 import initRoutes from "./route/index.route";
 import connectDB from "./config/connectDB";
 // import authMiddleware from '../src/middlewares/client/auth.middleware';
+import path from 'path';
 
 require('dotenv').config();
 
@@ -20,10 +21,11 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 app.use(cors());
 viewEngine(app);
-
+app.set("views", path.join(__dirname, "views"));
+app.use('/assets', express.static(path.join(__dirname, 'public/assets')));
 // Config router
 // app.use(authMiddleware.requiredAuth)
-// initWebRoutes(app);
+initWebRoutes(app);
 initRoutes(app);
 
 connectDB();

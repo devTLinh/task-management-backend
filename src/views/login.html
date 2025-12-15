@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login — TaskManager</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="./assets/css/auth.css" />
+  <link rel="stylesheet" href="./assets/css/app.css" />
+  <script defer src="./assets/js/toast.js"></script>
+  <script src="./assets/js/login.js"></script>
+</head>
+<body>
+  <section class="auth">
+    <div class="auth__container">
+      <div class="auth__box">
+        <div class="auth__logo">
+          <i class="fa-solid fa-layer-group"></i> TaskManager
+        </div>
+        <h2 class="auth__title">Welcome Back</h2>
+        <p class="auth__desc">Sign in to continue managing your projects and tasks efficiently.</p>
+        <form class="auth__form" id="loginForm">
+            <div class="auth__field">
+                <label><i class="fa-solid fa-envelope"></i> Email</label>
+                <input type="email" placeholder="you@example.com" id="emailInput" name="email" required />
+            </div>
+
+            <div class="auth__field">
+                <label><i class="fa-solid fa-lock"></i> Password</label>
+                <input type="password" placeholder="*********" id="passwordInput" name="password" required />
+            </div>
+
+            <button class="btn btn--primary" type="submit">Log In</button>
+        </form>
+        <p class="auth__switch">
+          Don't have an account?
+          <a href="/register">Create one</a>
+        </p>
+
+        <a href="/home" class="auth__back">
+          <i class="fa-solid fa-arrow-left"></i> Back to Home
+        </a>
+      </div>
+    </div>
+  </section>
+</body>
+</html>
+
+
+

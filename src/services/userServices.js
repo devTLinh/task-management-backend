@@ -1,4 +1,4 @@
-import db from '../models/index';
+﻿import db from '../models/index';
 import _ from 'lodash';
 import emailServices from './emailServices';
 import {
@@ -19,277 +19,327 @@ import {
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 require('dotenv').config();
+let postCreateMember = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (_.isEmpty(data)) {
+                return resolve({
+                    errorCode: 1,
+                    errorMessage: 'Missing data'
+                });
+            }
+            let check = checkIsValidInput(data, ['email', 'password', 'fullName']);
+            if (!check.isValid) {
+                return resolve({
+                    errorCode: 2,
+                    errorMessage: `Missing parameter: ${check.element}`
+                });
+            }
+            let emailExist = await db.User.findOne({
+                where: { Email: data.email }
+            });
+
+            if (emailExist) {
+                return resolve({
+                    errorCode: 2,
+                    errorMessage: 'Email already exists'
+                });
+            }
+            const generatedUserName = data.email.split('@')[0];
+            let hashedPassword = await hashValue(data.password);
+            let newUser = await db.User.create({
+                UserName: generatedUserName,
+                Email: data.email,
+                PasswordHash: hashedPassword,
+                FullName: data.fullName,
+                Role: 'Member'
+            });
+
+            return resolve({
+                errorCode: 0,
+                errorMessage: 'Create user successfully',
+                user: newUser
+            });
+
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
 
 let postCreateUser = (data) => {
-   return new Promise(async (resolve, reject) => {
-      try {
-         if (_.isEmpty(data)) {
-            resolve({
-               errorCode: 1,
-               errorMessage: 'Missing data'
-            })
-         } else {
-            let check = checkIsValidInput(data, ['userName', 'email', 'password', 'fullName', 'role']);
-            // let check = checkIsValidInput(data, ['userName', 'email', 'password', 'fullName']);
-            if (!check.isValid) {
-               resolve({
-                  errorCode: 2,
-                  errorMessage: `Missing parameter: ${check.element}`
-               })
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (_.isEmpty(data)) {
+                resolve({
+                    errorCode: 1,
+                    errorMessage: 'Missing data'
+                })
             } else {
-               let emailExist = await db.User.findOne({
-                  where: {
-                     email: data.email
-                  }
-               });
+                let check = checkIsValidInput(data, ['userName', 'email', 'password', 'fullName', 'role']);
+                // let check = checkIsValidInput(data, ['userName', 'email', 'password', 'fullName']);
+                if (!check.isValid) {
+                    resolve({
+                        errorCode: 2,
+                        errorMessage: `Missing parameter: ${check.element}`
+                    })
+                } else {
+                    let emailExist = await db.User.findOne({
+                        where: {
+                            email: data.email
+                        }
+                    });
 
-               if (emailExist) {
-                  resolve({
-                     errorCode: 2,
-                     errorMessage: `Email already exists`
-                  })
-               } else {
-                  // Hash password
-                  let hashedPassword = await hashValue(data.password);
-                  // Create user
-                  let newUser = await db.User.create({
-                     userName: data.userName,
-                     email: data.email,
-                     password: hashedPassword,
-                     fullName: data.fullName,
-                     role: data.role
-                  });
+                    if (emailExist) {
+                        resolve({
+                            errorCode: 2,
+                            errorMessage: `Email already exists`
+                        })
+                    } else {
+                        // Hash password
+                        let hashedPassword = await hashValue(data.password);
+                        // Create user
+                        let newUser = await db.User.create({
+                            UserName: data.userName,
+                            Email: data.email,
+                            PasswordHash: hashedPassword,
+                            FullName: data.fullName,
+                            Role: data.role
+                        });
 
-                  resolve({
-                     errorCode: 0,
-                     errorMessage: `Create user successfully`,
-                     user: newUser
-                  })
-               }
+                        resolve({
+                            errorCode: 0,
+                            errorMessage: `Create user successfully`,
+                            user: newUser
+                        })
+                    }
+                }
             }
-         }
-      } catch (error) {
-         reject(error);
-      }
-   })
+        } catch (error) {
+            reject(error);
+        }
+    })
 }
 
 let putEditUser = (data) => {
-   return new Promise(async (resolve, reject) => {
-      try {
-         let check = checkIsValidInput(data, ['userName', 'email', 'fullName', 'role']);
-         if (_.isEmpty(data) || !check.isValid) {
-            resolve({
-               errorCode: 1,
-               errorMessage: `Missing parameter: ${check.element}`
-            })
-         } else {
-            // Check if user exists
+    return new Promise(async (resolve, reject) => {
+        try {
+            let check = checkIsValidInput(data, ['id', 'userName', 'email', 'fullName', 'role']);
+            if (!check.isValid) {
+                return resolve({
+                    errorCode: 1,
+                    errorMessage: `Missing parameter: ${check.element}`
+                });
+            }
+
+            // ✅ Kiểm tra email trùng
+            let existing = await db.User.findOne({
+                where: {
+                    Email: data.email,
+                    UserID: { [Op.ne]: data.id }
+                }
+            });
+
+            if (existing) {
+                return resolve({
+                    errorCode: 3,
+                    errorMessage: "Email already exists"
+                });
+            }
+
+            // ✅ Tìm user theo ID
             let user = await db.User.findOne({
-               where: {
-                  email: data.email
-               }
+                where: { UserID: data.id }
             });
 
             if (!user) {
-               resolve({
-                  errorCode: 2,
-                  errorMessage: `User not found`
-               })
-            } else {
-               // Update user
-               // let hashedPassword = await hashValue(data.password);
-               let hashedPassword = '';
-               if(data.password) {
-                  hashedPassword = await hashValue(data.password);
-               } else {
-                  hashedPassword = user.password;
-               }
-
-               await db.User.update({
-                  userName: data.userName,
-                  email: data.email,
-                  fullName: data.fullName,
-                  password: hashedPassword,
-                  role: data.role
-               }, {
-                  where: {
-                     id: user.id
-                  }
-               });
-
-               resolve({
-                  errorCode: 0,
-                  errorMessage: `Update user successfully`,
-               })
+                return resolve({
+                    errorCode: 2,
+                    errorMessage: "User not found"
+                });
             }
-         }
-      } catch (error) {
-         reject(error);
-      }
-   })
-}
+
+            // ✅ Update
+            let hashedPassword = data.password
+                ? await hashValue(data.password)
+                : user.PasswordHash;
+
+            await db.User.update(
+                {
+                    UserName: data.userName,
+                    Email: data.email,
+                    FullName: data.fullName,
+                    PasswordHash: hashedPassword,
+                    Role: data.role
+                },
+                { where: { UserID: data.id } }
+            );
+
+            return resolve({
+                errorCode: 0,
+                errorMessage: "Update user successfully"
+            });
+
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+
 
 let getAllUsers = () => {
-   return new Promise(async (resolve, reject) => {
-      try {
-         let users = await db.User.findAll({
-            attributes: {
-               exclude: ['password']
-            }
-         });
-         resolve({
-            errorCode: 0,
-            errorMessage: 'Get all users successfully',
-            users: users
-         });
-      } catch (error) {
-         reject(error);
-      }
-   })
+    return new Promise(async (resolve, reject) => {
+        try {
+            let users = await db.User.findAll({
+                attributes: {
+                    exclude: ['Password']
+                }
+            });
+            resolve({
+                errorCode: 0,
+                errorMessage: 'Get all users successfully',
+                users: users
+            });
+        } catch (error) {
+            reject(error);
+        }
+    })
 }
 
 let getUserById = (id) => {
-   return new Promise(async (resolve, reject) => {
-      try {
-         if (!id) {
-            resolve({
-               errorCode: 1,
-               errorMessage: 'Missing parameter: id'
-            });
-         } else {
-            let user = await db.User.findOne({
-               where: {
-                  id: id
-               },
-               attributes: {
-                  exclude: ['password']
-               }
-            });
-
-            if (!user) {
-               resolve({
-                  errorCode: 2,
-                  errorMessage: 'User not found'
-               });
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!id) {
+                resolve({
+                    errorCode: 1,
+                    errorMessage: 'Missing parameter: id'
+                });
             } else {
-               resolve({
-                  errorCode: 0,
-                  errorMessage: 'Get user by id successfully',
-                  user: user
-               });
+                let user = await db.User.findOne({
+                    where: {
+                        UserID: id
+                    },
+                    attributes: {
+                        exclude: ['password']
+                    }
+                });
+
+                if (!user) {
+                    resolve({
+                        errorCode: 2,
+                        errorMessage: 'User not found'
+                    });
+                } else {
+                    resolve(user);
+                }
             }
-         }
-      } catch (error) {
-         reject(error)
-      }
-   })
+        } catch (error) {
+            reject(error)
+        }
+    })
 }
 
 let deleteUser = (id) => {
-   return new Promise(async (resolve, reject) => {
-      try {
-         if (!id) {
-            resolve({
-               errorCode: 1,
-               errorMessage: 'Missing parameter: id'
-            })
-         } else {
-            let user = await db.User.findOne({
-               where: {
-                  id: id
-               }
-            })
-
-            if (!user) {
-               resolve({
-                  errorCode: 2,
-                  errorMessage: 'User not found'
-               })
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!id) {
+                resolve({
+                    errorCode: 1,
+                    errorMessage: 'Missing parameter: id'
+                })
             } else {
-               await db.User.destroy({
-                  where: {
-                     id: id
-                  }
-               })
-               resolve({
-                  errorCode: 0,
-                  errorMessage: 'Delete user successfully'
-               })
+                let user = await db.User.findOne({
+                    where: {
+                        id: id
+                    }
+                })
+
+                if (!user) {
+                    resolve({
+                        errorCode: 2,
+                        errorMessage: 'User not found'
+                    })
+                } else {
+                    await db.User.destroy({
+                        where: {
+                            id: id
+                        }
+                    })
+                    resolve({
+                        errorCode: 0,
+                        errorMessage: 'Delete user successfully'
+                    })
+                }
             }
-         }
-      } catch (error) {
-         reject(error);
-      }
-   })
+        } catch (error) {
+            reject(error);
+        }
+    })
 }
 
 let postLogin = (data) => {
-   return new Promise(async (resolve, reject) => {
-      try {
-         // let check = checkIsValidInput(data, ['email', 'password']);
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (_.isEmpty(data)) {
+                return resolve({
+                    errorCode: 1,
+                    errorMessage: 'Missing data'
+                });
+            }
 
-         if (_.isEmpty(data)) {
-            resolve({
-               errorCode: 1,
-               errorMessage: 'Missing data'
-            })
-         } else {
             let check = checkIsValidInput(data, ['email', 'password']);
             if (!check.isValid) {
-               resolve({
-                  errorCode: 2,
-                  errorMessage: `Missing parameter: ${check.element}`
-               })
-            } else {
-               let user = await db.User.findOne({
-                  where: {
-                     email: data.email
-                  },
-                  raw: true
-               })
-               if (!user) {
-                  resolve({
-                     errorCode: 3,
-                     errorMessage: 'User not found or email not exist !'
-                  })
-               } else {
-                  let checkPassword = bcrypt.compareSync(data.password, user.password);
-                  if (!checkPassword) {
-                     resolve({
-                        errorCode: 4,
-                        errorMessage: 'Wrong password!'
-                     })
-                  } else {
-                     delete user.password;
-                     user.token = randomString(20);
-                     const payload = {
-                        email: user.email,
-                        fullName: user.fullName,
-                        role: user.role
-                     }
-                     const access_token = jwt.sign(
-                        payload,
-                        process.env.JWT_SECRET,
-                        {
-                           expiresIn: process.env.JWT_EXPIRE
-                        }
-                     );
-                     resolve({
-                        errorCode: 0,
-                        errorMessage: 'Login successfully!',
-                        access_token: access_token,
-                        user: user
-                     })
-                  }
-               }
+                return resolve({
+                    errorCode: 2,
+                    errorMessage: `Missing parameter: ${check.element}`
+                });
             }
-         }
-      } catch (error) {
-         reject(error);
-      }
-   })
-}
+
+            let user = await db.User.findOne({
+                where: { email: data.email },
+                raw: true
+            });
+
+            if (!user) {
+                return resolve({
+                    errorCode: 3,
+                    errorMessage: 'User not found or email not exist !'
+                });
+            }
+
+            let checkPassword = bcrypt.compareSync(data.password, user.PasswordHash);
+            if (!checkPassword) {
+                return resolve({
+                    errorCode: 4,
+                    errorMessage: 'Wrong password!'
+                });
+            }
+
+            delete user.PasswordHash;
+
+            const payload = {
+                userId: user.UserID,
+                email: user.Email,
+                fullName: user.FullName,
+                role: user.Role
+            };
+
+            const access_token = jwt.sign(payload, process.env.JWT_SECRET, {
+                expiresIn: process.env.JWT_EXPIRE
+            });
+
+            return resolve({
+                errorCode: 0,
+                errorMessage: 'Login successfully!',
+                access_token,
+                user
+            });
+
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
 
 let postForgotPassword = (data) => {
    return new Promise(async (resolve, reject) => {
@@ -392,40 +442,40 @@ let postVerifyForgotPassword = (data) => {
 }
 
 let getSearchUsersByUserName = (name) => {
-   return new Promise(async (resolve, reject) => {
-      try {
-         if (!name) {
-            let data = await db.User.findAll({
-               attributes: {
-                  exclude: ['password', 'token']
-               }
-            });
-            resolve({
-               errorCode: 0,
-               errorMessage: 'Get full users in database',
-               data: data
-            })
-         } else {
-            let data = await db.User.findAll({
-               where: {
-                  username: {
-                     [Op.like]: `%${name}%`
-                  }
-               },
-               attributes: {
-                  exclude: ['password', 'token']
-               }
-            })
-            resolve({
-               errorCode: 0,
-               errorMessage: 'Get users by username successfully',
-               data: data
-            })
-         }
-      } catch (error) {
-         reject(error);
-      }
-   })
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!name) {
+                let data = await db.User.findAll({
+                    attributes: {
+                        exclude: ['password', 'token']
+                    }
+                });
+                resolve({
+                    errorCode: 0,
+                    errorMessage: 'Get full users in database',
+                    data: data
+                })
+            } else {
+                let data = await db.User.findAll({
+                    where: {
+                        username: {
+                            [Op.like]: `%${name}%`
+                        }
+                    },
+                    attributes: {
+                        exclude: ['password', 'token']
+                    }
+                })
+                resolve({
+                    errorCode: 0,
+                    errorMessage: 'Get users by username successfully',
+                    data: data
+                })
+            }
+        } catch (error) {
+            reject(error);
+        }
+    })
 }
 
 module.exports = {
@@ -438,5 +488,5 @@ module.exports = {
    postForgotPassword: postForgotPassword,
    postVerifyForgotPassword: postVerifyForgotPassword,
    getSearchUsersByUserName: getSearchUsersByUserName,
-
+   postCreateMember: postCreateMember
 }

@@ -22,8 +22,8 @@ let postCreateComment = (data) => {
                let checkComment = await db.comment.findOne({
                   where: {
                      [Op.and]: [
-                        {userId: {[Op.eq]: data.userId}},
-                        {content: {[Op.eq]: data.content}}
+                        {UserId: {[Op.eq]: data.userId}},
+                        {Content: {[Op.eq]: data.content}}
                      ]
                   }
                })
@@ -34,9 +34,9 @@ let postCreateComment = (data) => {
                   })
                } else {
                   await db.comment.create({
-                     taskId: data.taskId,
-                     userId: data.userId,
-                     content: data.content
+                     TaskID: data.taskId,
+                     UserID: data.userId,
+                     Content: data.content
                   })
                   resolve({
                      errorCode: 0,
@@ -59,17 +59,17 @@ let getAllComments = (query) => {
          if(userId && taskId) {
             whereCondition = {
                [Op.and]: [
-                  {userId: {[Op.eq]: userId}},
-                  {taskId: {[Op.eq]: taskId}},
+                  {UserID: {[Op.eq]: userId}},
+                  {TaskID: {[Op.eq]: taskId}},
                ]
             }
          } else if(userId) {
             whereCondition = {
-               userId: userId
+               UserID: userId
             }
          } else if(taskId) {
             whereCondition = {
-               taskId: taskId
+               TaskID: taskId
             }
          }
          let data = await db.comment.findAll({
@@ -77,13 +77,11 @@ let getAllComments = (query) => {
             include: [
                {
                   model: db.User,
-                  as: 'userInfoComment',
-                  attributes: ['userName', 'fullName', 'email', 'role']
+                  attributes: ['UserName', 'FullName', 'Email', 'Role']
                },
                {
                   model: db.Task,
-                  as: 'taskInfo',
-                  attributes: ['title', 'description', 'status', 'priority', 'dueDate']
+                  attributes: ['Title', 'Description', 'Status', 'Priority', 'DueDate']
                }
             ]
          })
@@ -108,8 +106,8 @@ let deleteCommentById = (query) => {
                errorMessage: 'Missing parameter'
             })
          } else {
-            let checkCommentExist = await db.comment.findOne({
-               where: {id: id}
+            let checkCommentExist = await db.Comment.findOne({
+               where: {CommentID: id}
             })
             if(!checkCommentExist) {
                resolve({

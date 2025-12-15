@@ -1,4 +1,4 @@
-import { checkIsValidInput } from '../helpers/checkIsValidInput';
+﻿import { checkIsValidInput } from '../helpers/checkIsValidInput';
 import db from '../models/index';
 import _, { includes } from 'lodash';
 import { Op, where } from 'sequelize';
@@ -32,12 +32,12 @@ let postCreateProject = (data) => {
                   })
                } else {
                   await db.Project.create({
-                     name: data.name,
-                     description: data.description,
-                     startDate: data.startDate,
-                     endDate: data.endDate,
-                     status: data.status,
-                     createdBy: data.createdBy
+                     Name: data.name,
+                     Description: data.description,
+                     StartDate: data.startDate,
+                     EndDate: data.endDate,
+                     Status: data.status,
+                     CreatedBy: data.createdBy
                   })
 
                   resolve({
@@ -71,8 +71,8 @@ let putEditProject = (data) => {
                })
             } else {
                let project = await db.Project.findOne({
-                  where: {
-                     id: data.id
+                   where: {
+                       ProjectID: data.id
                   }
                });
 
@@ -82,11 +82,11 @@ let putEditProject = (data) => {
                      errorMessage: 'Project not found'
                   })
                } else {
-                  project.name = data.name;
-                  project.description = data.description;
-                  project.startDate = data.startDate;
-                  project.endDate = data.endDate;
-                  project.status = data.status;
+                  project.Name = data.name;
+                  project.Description = data.description;
+                  project.StartDate = data.startDate;
+                  project.EndDate = data.endDate;
+                  project.Status = data.status;
 
                   await project.save();
 
@@ -121,7 +121,7 @@ let patchUpdateStatusProject = async (data) => {
    }
 
    const project = await db.Project.findOne({
-      where: { id: data.id }
+       where: { ProjectID: data.id }
    });
 
    if (!project) {
@@ -131,23 +131,22 @@ let patchUpdateStatusProject = async (data) => {
       };
    }
 
-   if (project.status === data.status) {
+   if (project.Status === data.status) {
       return {
          errorCode: 4,
          errorMessage: 'New status must be different from old status!'
       };
    }
 
-   project.status = data.status;
+   project.Status = data.status;
    await project.save();
 
    // Send email
-   let users = await db.projectMember.findAll({
-      where: {projectId: data.id},
+   let users = await db.ProjectMember.findAll({
+      where: {ProjectId: data.id},
       include: [
          {
             model: db.User,
-            as: 'projectMemeberInfo',
             attributes: ['userName', 'fullName', 'email']
          }
       ]
@@ -159,7 +158,7 @@ let patchUpdateStatusProject = async (data) => {
       }
    })
    // console.log(arrayUsers);
-   await emailServices.sendEmailChangeStatusToUsers(project.name, arrayUsers, data.status);
+   await emailServices.sendEmailChangeStatusToUsers(project.Name, arrayUsers, data.status);
    // End Send email
 
    return {
@@ -179,8 +178,8 @@ let getAllProjects = () => {
                include: [
                   {
                      model: db.User,
-                     as: 'creatorInfo',
-                     attributes: ['userName', 'fullName', 'email', 'role']
+                     as: 'Creator',
+                     attributes: ['UserName', 'FullName', 'Email', 'Role']
                   }
                ]
             }
@@ -197,95 +196,91 @@ let getAllProjects = () => {
 }
 
 let getProjectByIdOrCreatedBy = (data) => {
-   return new Promise(async (resolve, reject) => {
-      try {
-         const { id, createdBy } = data || {};
-         if (id && createdBy) {
-            let project = await db.Project.findOne({
-               where: {
-                  id: id,
-                  createdBy: createdBy
-               },
-               include: [
-                  {
-                     model: db.User,
-                     as: 'creatorInfo',
-                     attributes: ['userName', 'fullName', 'email', 'role']
-                  }
-               ]
-            })
-            if(!project) {
-               resolve({
-                  errorCode: 2,
-                  errorMessage: "Project's include id and createdBy not exist. Plz inspect again!"
-               })
-            } else {
-               resolve({
-                  errorCode: 0,
-                  errorMessage: 'Get project by id and createdBy successfully!',
-                  project: project
-               })
+    return new Promise(async (resolve, reject) => {
+        try {
+            const { id, createdBy } = data || {};
+
+            const includeConfig = [
+                {
+                    model: db.User,
+                    as: 'Creator',
+                    attributes: ['UserID', 'UserName', 'FullName', 'Email', 'Role']
+                },
+                {
+                    model: db.User,
+                    as: 'Members', 
+                    attributes: ['UserID', 'UserName', 'FullName', 'Email'],
+                    through: {
+                        attributes: ['Role', 'JoinedAt'] 
+                    }
+                }
+            ];
+
+            // ✅ Trường hợp: tìm theo cả id + createdBy
+            if (id && createdBy) {
+                const project = await db.Project.findOne({
+                    where: { ProjectID: id, CreatedBy: createdBy },
+                    include: includeConfig
+                });
+
+                if (!project) {
+                    resolve({
+                        errorCode: 2,
+                        errorMessage: "Project with this id and createdBy does not exist"
+                    });
+                } else {
+                    resolve({
+                        errorCode: 0,
+                        errorMessage: "Get project by id and createdBy successfully",
+                        project
+                    });
+                }
+                return;
             }
-         } else if(id){
-            let project = await db.Project.findOne({
-               where: {
-                  id: id
-               },
-               include: [
-                  {
-                     model: db.User,
-                     as: 'creatorInfo',
-                     attributes: ['userName', 'fullName', 'email', 'role']
-                  }
-               ]
+            if (id) {
+                const project = await db.Project.findOne({
+                    where: { ProjectID: id },
+                    include: includeConfig
+                });
+
+                if (!project) {
+                    resolve({
+                        errorCode: 2,
+                        errorMessage: "Project not found"
+                    });
+                } else {
+                    resolve({
+                        errorCode: 0,
+                        errorMessage: "Get project by id successfully",
+                        project
+                    });
+                }
+                return;
+            }
+            if (createdBy) {
+                const projects = await db.Project.findAll({
+                    where: { CreatedBy: createdBy },
+                    include: includeConfig
+                });
+
+                resolve({
+                    errorCode: 0,
+                    errorMessage: "Get all projects by createdBy successfully",
+                    projects
+                });
+                return;
+            }
+            resolve({
+                errorCode: 1,
+                errorMessage: "Missing parameter id or createdBy"
             });
 
-            if (!project) {
-               resolve({
-                  errorCode: 2,
-                  errorMessage: 'Project not found'
-               })
-            } else {
-               resolve({
-                  errorCode: 0,
-                  errorMessage: 'Get project by id successfully',
-                  project: project
-               })
-            }
-         } else if(createdBy) {
-            let projectByCreatedBy = await db.Project.findAll({
-               where: { createdBy: createdBy },
-               include: [
-                  {
-                     model: db.User,
-                     as: 'creatorInfo',
-                     attributes: ['userName', 'fullName', 'email', 'role']
-                  }
-               ]
-            });
-            if(!projectByCreatedBy) {
-               resolve({
-                  errorCode: 2,
-                  errorMessage: 'CreatedBy is not exist ... !'
-               })
-            } else {
-               resolve({
-                  errorCode: 0,
-                  errorMessage: 'Get All projects by createdBy successfully!',
-                  projects: projectByCreatedBy
-               })
-            }
-         } else {
-            resolve({
-               errorCode: 1,
-               errorMessage: 'Missing parameter id or createdBy !'
-            })
-         }
-      } catch (error) {
-         reject(error);
-      }
-   })
-}
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+
 
 let deleteProject = (id) => {
    return new Promise(async (resolve, reject) => {
@@ -297,8 +292,8 @@ let deleteProject = (id) => {
             })
          } else {
             let project = await db.Project.findOne({
-               where: {
-                  id: id
+                where: {
+                    ProjectID: id
                }
             })
 
@@ -330,17 +325,17 @@ let getSearchProjectsByName = (query) => {
          if(name && status) {
             whereCondition = {
                [Op.and]: [
-                  {name: {[Op.like]: `%${name}%`}},
-                  {status: {[Op.eq]: status}}
+                  {Name: {[Op.like]: `%${name}%`}},
+                  {Status: {[Op.eq]: status}}
                ]
             }
          } else if(name) {
             whereCondition = {
-               name: {[Op.like]: `%${name}%`}
+               Name: {[Op.like]: `%${name}%`}
             }
          } else if (status) {
             whereCondition = {
-               status: {[Op.eq]: status}
+               Status: {[Op.eq]: status}
             }
          } else {
             resolve({
@@ -354,8 +349,8 @@ let getSearchProjectsByName = (query) => {
             include: [
                {
                   model: db.User,
-                  as: 'creatorInfo',
-                  attributes: ['userName', 'fullName', 'email', 'role']
+                  as: 'Creator',
+                  attributes: ['UserName', 'FullName', 'Email', 'Role']
                }
             ]
          })

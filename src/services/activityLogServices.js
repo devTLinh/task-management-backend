@@ -1,52 +1,43 @@
-import { Op, where } from 'sequelize';
+﻿import { Op, where } from 'sequelize';
 import { checkIsValidInput } from '../helpers/checkIsValidInput';
 import db from '../models/index';
 import _, { includes } from 'lodash';
 
 let postCreateActivityLog = (data) => {
-   return new Promise(async (resolve, reject) => {
-      try {
-         if(_.isEmpty(data)) {
-            resolve({
-               errorCode: 1,
-               errorMessage: 'Missing data'
-            })
-         } else {
-            let check = checkIsValidInput(data, ['userId','action']);
-            if(!check.isValid) {
-               resolve({
-                  errorCode: 2,
-                  errorMessage: `Missing parameter: ${check.element}`
-               })
-            } else {
-               let [newActivityLog, checkIsExist] = await db.activityLog.findOrCreate({
-                  where: {
-                     userId: data.userId,
-                     action: data.action
-                  },
-                  defaults: {
-                     userId: data.userId,
-                     action: data.action
-                  }
-               })
-               if(checkIsExist) {
-                  resolve({
-                     errorCode: 0,
-                     errorMessage: 'Create activity log successfully!'
-                  })
-               } else {
-                  resolve({
-                     errorCode: 3,
-                     errorMessage: 'Activity log is exist in database'
-                  })
-               }
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (_.isEmpty(data)) {
+                return resolve({
+                    errorCode: 1,
+                    errorMessage: 'Missing data'
+                });
             }
-         }
-      } catch (error) {
-         reject(error);
-      }
-   })
-}
+
+            let check = checkIsValidInput(data, ['userId', 'action']);
+            if (!check.isValid) {
+                return resolve({
+                    errorCode: 2,
+                    errorMessage: `Missing parameter: ${check.element}`
+                });
+            }
+
+            // ✅ Tạo log mới mỗi lần
+            await db.ActivityLog.create({
+                UserID: data.userId,
+                Action: data.action
+            });
+
+            return resolve({
+                errorCode: 0,
+                errorMessage: 'Create activity log successfully!'
+            });
+
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
+
 
 let getAllActivityOrUserAction = (query) => {
    return new Promise(async (resolve, reject) => {
@@ -56,26 +47,26 @@ let getAllActivityOrUserAction = (query) => {
          if(userId && action) {
             whereCondition = {
                [Op.and]: [
-                  {userId: {[Op.eq]: userId}},
-                  {action: {[Op.eq]: action}},
+                  {UserID: {[Op.eq]: userId}},
+                  {Action: {[Op.eq]: action}},
                ]
             }
          } else if(userId) {
             whereCondition = {
-               userId: userId
+               UserID: userId
             }
          } else if(action) {
             whereCondition = {
-               action: action
+               Action: action
             }
          }
-         let data = await db.activityLog.findAll({
+         let data = await db.ActivityLog.findAll({
             where: whereCondition,
             include: [
                {
                   model: db.User,
-                  as: 'userInfoActivityLog',
-                  attributes: ['userName','email','fullName','role']
+                    as: 'Actor',
+                  attributes: ['UserName','Email','FullName','Role']
                }
             ]
          })

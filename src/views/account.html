@@ -1,0 +1,132 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Account — TaskManager</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="./assets/css/home.css" />
+  <link rel="stylesheet" href="./assets/css/app.css" />
+  <script defer src="./assets/js/app.js"></script>
+  <script defer src="./assets/js/activity.js"></script>
+  <script defer src="./assets/js/account.js"></script>
+  <script defer src="./assets/js/toast.js"></script></head>
+<body>
+  <header class="header">
+    <div class="header__logo"><i class="fa-solid fa-layer-group header__logo-icon"></i><span class="header__logo-text">TaskManager</span></div>
+    <nav class="header__nav">
+      <a href="/home" class="header__nav-link"><i class="fa-solid fa-house"></i> Home</a>
+      <a href="/projects" class="header__nav-link"><i class="fa-solid fa-diagram-project"></i> Projects</a>
+      <a href="/tasks" class="header__nav-link"><i class="fa-solid fa-list-check"></i> Tasks</a>
+      <a href="/users" class="header__nav-link"><i class="fa-solid fa-users"></i> Users</a>
+      <a href="/reports" class="header__nav-link"><i class="fa-solid fa-chart-line"></i> Reports</a>
+    </nav>
+    <div class="header__actions">
+      <a href="/home" class="btn btn--white"><i class="fa-solid fa-arrow-left"></i> Back</a>
+    </div>
+  </header>
+
+  <main class="page container page--account">
+    <h1 class="page__title"><i class="fa-regular fa-user"></i> My Account</h1>
+    <p class="page__desc">View and update your profile information. Password is not shown.</p>
+
+    <div class="tabs" role="tablist">
+      <button class="tab tab--active" data-tab="profile">Profile</button>
+      <button class="tab" data-tab="admin" id="adminTab" hidden>Admin Tools</button>
+    </div>
+
+    <div class="tabpanes">
+      <section class="tabpane tabpane--active" data-pane="profile">
+        <form id="accountForm" class="modal__form" style="max-width:640px">
+          <div class="row-2">
+            <label>Username
+              <input type="text" id="accUsername" placeholder="username" disabled />
+            </label>
+            <label>Role
+              <input type="text" id="accRole" disabled />
+            </label>
+          </div>
+          <label>Full name
+            <input type="text" id="accFullName" required />
+          </label>
+          <label>Email
+            <input type="email" id="accEmail" placeholder="name@example.com" />
+          </label>
+          <div class="modal__actions">
+            <button type="button" class="btn btn--white" id="btnChangePwd">Change password</button>
+            <button type="submit" class="btn btn--primary">Save</button>
+          </div>
+          <p class="subtle" id="accountHint"></p>
+        </form>
+      </section>
+
+      <section class="tabpane" data-pane="admin" id="adminPane">
+        <p class="subtle">Change roles for other users.</p>
+        <table class="table" id="adminUserTable">
+          <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Updated</th><th></th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </section>
+    </div>
+  </main>
+  
+  <footer class="footer">
+    <div class="footer__container">
+      <div class="footer__col footer__about">
+        <h3>TaskManager</h3>
+        <p>The ultimate workspace for managing projects, tracking tasks, and empowering teamwork.</p>
+      </div>
+      <div class="footer__col footer__links">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="/home" class="footer__link">Home</a></li>
+          <li><a href="/projects" class="footer__link" data-auth="required">Projects</a></li>
+          <li><a href="/tasks" class="footer__link" data-auth="required">Tasks</a></li>
+          <li><a href="/reports" class="footer__link" data-auth="required">Reports</a></li>
+        </ul>
+      </div>
+      <div class="footer__col footer__contact">
+        <h4>Contact</h4>
+        <p>Email: support@taskmanager.com</p>
+        <p>Phone: +84 123 456 789</p>
+        <div class="footer__social">
+          <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#"><i class="fa-brands fa-twitter"></i></a>
+          <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+          <a href="#"><i class="fa-brands fa-github"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <p>&copy; 2025 TaskManager | Designed by <strong>Pham Canh Lam</strong></p>
+    </div>
+  </footer>
+  
+  <!-- Change Password Modal -->
+  <div class="modal" id="pwdModal" aria-hidden="true">
+    <div class="modal__overlay" data-close></div>
+    <div class="modal__content" role="dialog" aria-modal="true" aria-labelledby="pwdModalTitle">
+      <h3 id="pwdModalTitle">Change password</h3>
+      <form id="pwdForm" class="modal__form">
+        <p class="subtle" id="pwdHint"></p>
+        <label id="groupCurrent">Current password
+          <input type="password" id="pwdCurrent" autocomplete="current-password" />
+        </label>
+        <label>New password
+          <input type="password" id="pwdNew" autocomplete="new-password" required />
+        </label>
+        <label>Confirm new password
+          <input type="password" id="pwdConfirm" autocomplete="new-password" required />
+        </label>
+        <div class="modal__actions">
+          <button type="button" class="btn btn--white" data-close>Cancel</button>
+          <button type="submit" class="btn btn--primary">Update</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
+
+
+

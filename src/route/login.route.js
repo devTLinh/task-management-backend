@@ -11,4 +11,6 @@ router.post('/forgot-password', controller.postForgotPassword);
 
 router.post('/verify-forgot-password', controller.postVerifyForgotPassword);
 
+//router.post('/api/register', userController.postCreateMember);
+
 module.exports = router;

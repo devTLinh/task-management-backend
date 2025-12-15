@@ -1,4 +1,4 @@
-import { where, Op } from "sequelize";
+﻿import { where, Op } from "sequelize";
 import { checkIsValidInput } from "../helpers/checkIsValidInput";
 import db from "../models/index";
 import _, { assign, at, reject } from 'lodash';
@@ -30,13 +30,13 @@ let postCreateTask = (data) => {
                   });
                } else {
                   let task = await db.Task.create({
-                     projectId: data.projectId,
-                     assignedTo: data.assignedTo,
-                     title: data.title,
-                     description: data.description,
-                     status: data.status,
-                     priority: data.priority,
-                     dueDate: data.dueDate
+                     ProjectID: data.projectId,
+                     AssignedTo: data.assignedTo,
+                     Title: data.title,
+                     Description: data.description,
+                     Status: data.status,
+                     Priority: data.priority,
+                     DueDate: data.dueDate
                   });
 
                   resolve({
@@ -59,8 +59,8 @@ let getAllTasks = () => {
          let data = await db.Task.findAll(
             {
                include: [
-                  { model: db.Project, as: 'projectData', attributes: ['name', 'description', 'status', 'startDate', 'endDate'] },
-                  { model: db.User, as: 'userInfo', attributes: ['userName', 'email', 'fullName', 'role'] }
+                  { model: db.Project, attributes: ['Name', 'Description', 'Status', 'StartDate', 'EndDate'] },
+                    { model: db.User, as: 'Assignee', attributes: ['UserName', 'Email', 'FullName', 'Role'] }
                ]
             }
          );
@@ -82,12 +82,12 @@ let getTaskByIdOrAssigntedTo = (data) => {
          if(id && assignedTo) {
             let task = await db.Task.findOne({
                where: {
-                  id: id,
+                  TaskID: id,
                   assignedTo: assignedTo
                },
                include: [
-                  { model: db.Project, as: 'projectData', attributes: ['name', 'description', 'status', 'startDate', 'endDate'] },
-                  { model: db.User, as: 'userInfo', attributes: ['userName', 'email', 'fullName', 'role'] }
+                  { model: db.Project, attributes: ['Name', 'Description', 'Status', 'StartDate', 'EndDate'] },
+                   { model: db.User, as: 'Assignee', attributes: ['UserName', 'Email', 'FullName', 'Role'] }
                ]
             })
             if(!task) {
@@ -104,10 +104,10 @@ let getTaskByIdOrAssigntedTo = (data) => {
             }
          } else if(id) {
             let data = await db.Task.findOne({
-               where: {id: id},
+               where: {TaskID: id},
                include: [
-                  { model: db.Project, as: 'projectData', attributes: ['name', 'description', 'status', 'startDate', 'endDate'] },
-                  { model: db.User, as: 'userInfo', attributes: ['userName', 'email', 'fullName', 'role'] }
+                   { model: db.Project, attributes: ['Name', 'Description', 'Status', 'StartDate', 'EndDate'] },
+                   { model: db.User, as: 'Assignee', attributes: ['UserName', 'Email', 'FullName', 'Role'] }
                ]
             });
             if(data) {
@@ -126,8 +126,8 @@ let getTaskByIdOrAssigntedTo = (data) => {
             let tasks = await db.Task.findAll({
                where: { assignedTo: assignedTo },
                include: [
-                  { model: db.Project, as: 'projectData', attributes: ['name', 'description', 'status', 'startDate', 'endDate'] },
-                  { model: db.User, as: 'userInfo', attributes: ['userName', 'email', 'fullName', 'role'] }
+                   { model: db.Project, attributes: ['Name', 'Description', 'Status', 'StartDate', 'EndDate'] },
+                   { model: db.User, as: 'Assignee', attributes: ['UserName', 'Email', 'FullName', 'Role'] }
                ]
             })
             if(!tasks) {
@@ -164,9 +164,9 @@ let getAllTaskByProjectId = (projectId) => {
             })
          } else {
             let data = await db.Task.findAll({
-               where: {projectId: projectId},
+               where: {ProjectID: projectId},
                include: [
-                  { model: db.User, as: 'userInfo', attributes: ['userName', 'email', 'fullName', 'role'] }
+                   { model: db.User, as: 'Assignee', attributes: ['userName', 'email', 'fullName', 'role'] }
                ]
             });
             if(data) {
@@ -199,7 +199,7 @@ let deleteTaskById = (id) => {
          } else {
             let data = await db.Task.findOne(
                {
-                  where: {id: id}
+                  where: {TaskID: id}
                }
             )
             if(data) {
@@ -246,8 +246,8 @@ let getSearchTaskByTitleStatus = (query) => {
          let data = await db.Task.findAll({
             where: whereCondition,
             include: [
-               { model: db.Project, as: 'projectData', attributes: ['name', 'description', 'status', 'startDate', 'endDate'] },
-               { model: db.User, as: 'userInfo', attributes: ['userName', 'email', 'fullName', 'role'] }
+               { model: db.Project, attributes: ['Name', 'Description', 'Status', 'StartDate', 'EndDate'] },
+                { model: db.User, as: 'Assignee', attributes: ['UserName', 'Email', 'FullName', 'Role'] }
             ]
          })
          resolve({
@@ -260,7 +260,36 @@ let getSearchTaskByTitleStatus = (query) => {
       }
    })
 }
+let putUpdateTask = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const { id, projectId, assignedTo, title, description, priority, dueDate } = data;
+            if (!id) {
+                resolve({ errorCode: 1, errorMessage: 'Missing task ID' });
+            } else {
+                let task = await db.Task.findOne({ where: { TaskID: id } });
+                if (!task) {
+                    resolve({ errorCode: 2, errorMessage: 'Task not found' });
+                } else {
+                    // Cập nhật tất cả các trường
+                    task.ProjectID = projectId || task.ProjectID;
+                    task.AssignedTo = assignedTo || task.AssignedTo;
+                    task.Title = title || task.Title;
+                    task.Description = description || task.Description;
+                    task.Priority = priority || task.Priority;
+                    task.DueDate = dueDate || task.DueDate;
+                    // LƯU Ý: Không nên cho phép cập nhật Status/Priority ở đây, mà dùng PATCH riêng
+                    // Nếu bạn muốn gộp: task.Status = data.status || task.Status; 
 
+                    await task.save();
+                    resolve({ errorCode: 0, errorMessage: 'Task updated successfully', data: task });
+                }
+            }
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
 let patchChangeStatusTaskById = (data) => {
    return new Promise(async (resolve, reject) => {
       try {
@@ -279,10 +308,10 @@ let patchChangeStatusTaskById = (data) => {
             } else {
                let task = await db.Task.findOne(
                   { 
-                     where: {id: data.id},
+                     where: {TaskID: data.id},
                      include: [
-                        { model: db.Project, as: 'projectData', attributes: ['name', 'description', 'status', 'startDate', 'endDate'] },
-                        { model: db.User, as: 'userInfo', attributes: ['userName', 'email', 'fullName', 'role'] }
+                        { model: db.Project, attributes: ['Name', 'Description', 'Status', 'StartDate', 'EndDate'] },
+                         { model: db.User, as: 'Assignee', attributes: ['UserName', 'Email', 'FullName', 'Role'] }
                      ]
                   }
                );
@@ -293,10 +322,10 @@ let patchChangeStatusTaskById = (data) => {
                   })
                } else {
                   if(data.status) {
-                     task.status = data.status
+                     task.Status = data.status
                   }
                   if(data.priority) {
-                     task.priority = data.priority;
+                     task.Priority = data.priority;
                   }
                   await task.save();
                   resolve({
@@ -320,5 +349,6 @@ module.exports = {
    deleteTaskById,
    getSearchTaskByTitleStatus,
    patchChangeStatusTaskById,
-   getAllTaskByProjectId
+    getAllTaskByProjectId,
+    putUpdateTask
 }

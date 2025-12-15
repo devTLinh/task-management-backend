@@ -1,7 +1,7 @@
 import activityLogServices from '../services/activityLogServices';
 
 let postCreateActivityLog = async (req, res) => {
-   try {
+    try {
       let data = await activityLogServices.postCreateActivityLog(req.body);
       return res.status(200).json(data);
    } catch (error) {

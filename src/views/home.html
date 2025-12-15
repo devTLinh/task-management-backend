@@ -1,0 +1,454 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TaskManager — Home</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="./assets/css/home.css" />
+  <link rel="stylesheet" href="./assets/css/app.css" />
+  <script src="./assets/js/home.js"></script>
+
+  <script defer src="./assets/js/toast.js"></script></head>
+<body>
+  <!-- ===== HEADER ===== -->
+  <header class="header">
+    <div class="header__logo">
+      <i class="fa-solid fa-layer-group header__logo-icon"></i>
+      <span class="header__logo-text">TaskManager</span>
+    </div>
+    <nav class="header__nav">
+      <a href="/home" class="header__nav-link header__nav-link--active">
+        <i class="fa-solid fa-house"></i> Home
+      </a>
+      <a href="/projects" class="header__nav-link" data-auth="required">
+        <i class="fa-solid fa-diagram-project"></i> Projects
+      </a>
+      <a href="/tasks" class="header__nav-link" data-auth="required">
+        <i class="fa-solid fa-list-check"></i> Tasks
+      </a>
+      <a href="/users" class="header__nav-link" data-auth="required">
+        <i class="fa-solid fa-users"></i> Users
+      </a>
+      <a href="/reports" class="header__nav-link" data-auth="required">
+        <i class="fa-solid fa-chart-line"></i> Reports
+      </a>
+    </nav>
+    <div class="header__actions">
+      <a href="/login" class="btn btn--white" aria-label="ÄÄƒng nháº­p">
+        <i class="fa-regular fa-circle-user"></i> Log in
+      </a>
+      <a href="/register" class="btn btn--primary" aria-label="ÄÄƒng kÃ½">
+        <i class="fa-solid fa-user-plus"></i> Sign up
+      </a>
+    </div>
+  </header>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="hero__bg"></div>
+
+    <div class="hero__icons">
+      <i class="fa-solid fa-gear hero__icon hero__icon--1"></i>
+      <i class="fa-solid fa-folder-open hero__icon hero__icon--2"></i>
+      <i class="fa-solid fa-message hero__icon hero__icon--3"></i>
+      <i class="fa-solid fa-circle-check hero__icon hero__icon--4"></i>
+    </div>
+
+    <div class="hero__content">
+      <h1 class="hero__title">Organize. Collaborate. Succeed.</h1>
+      <p class="hero__desc">
+        Turn chaos into clarity with TaskManager â€” your all-in-one workspace for team productivity.
+      </p>
+      <div class="hero__buttons">
+        <button class="btn btn--primary" data-auth="required"><i class="fa-solid fa-bolt"></i> Get Started Free</button>
+        <a class="btn btn--white" href="/projects" data-auth="required" aria-label="Open Projects"><i class="fa-solid fa-arrow-right"></i> Open Projects</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== WHY CHOOSE US ===== -->
+  <section class="why" id="why">
+    <h2 class="why__title">Why Choose TaskManager?</h2>
+    <div class="why__grid">
+      <a class="why__card why__card--link" href="/tasks" data-auth="required" aria-label="Boost Productivity">
+        <i class="fa-solid fa-rocket why__icon"></i>
+        <h4 class="why__card-title">Boost Productivity</h4>
+        <p class="why__card-text">Manage all your work efficiently and deliver faster with less effort.</p>
+      </a>
+      <a class="why__card why__card--link" href="/projects" data-auth="required" aria-label="Empower Collaboration">
+        <i class="fa-solid fa-people-group why__icon"></i>
+        <h4 class="why__card-title">Empower Collaboration</h4>
+        <p class="why__card-text">Keep your team connected with chat, files, and shared boards.</p>
+      </a>
+      <a class="why__card why__card--link" href="/reports" data-auth="required" aria-label="Insightful Analytics">
+        <i class="fa-solid fa-chart-simple why__icon"></i>
+        <h4 class="why__card-title">Insightful Analytics</h4>
+        <p class="why__card-text">Visualize your progress and team performance in real time.</p>
+      </a>
+    </div>
+  </section>
+
+  <!-- ===== FEATURES ===== -->
+  <section class="features" id="features">
+    <h2 class="features__title"><i class="fa-solid fa-layer-group"></i> Explore Main Features</h2>
+    <div class="features__grid">
+      <div class="features__card" data-anim>
+        <div class="features__icon-bg"><i class="fa-solid fa-users"></i></div>
+        <h4 class="features__card-title">Team Management</h4>
+        <p class="features__card-text">Invite members, assign roles, and collaborate in real-time.</p>
+      </div>
+      <div class="features__card" data-anim>
+        <div class="features__icon-bg"><i class="fa-solid fa-diagram-project"></i></div>
+        <h4 class="features__card-title">Project Planning</h4>
+        <p class="features__card-text">Plan, schedule, and organize your projects visually.</p>
+      </div>
+      <div class="features__card" data-anim>
+        <div class="features__icon-bg"><i class="fa-solid fa-list-check"></i></div>
+        <h4 class="features__card-title">Task Tracking</h4>
+        <p class="features__card-text">Assign, prioritize, and track tasks with smart filters.</p>
+      </div>
+      <div class="features__card" data-anim>
+        <div class="features__icon-bg"><i class="fa-solid fa-comments"></i></div>
+        <h4 class="features__card-title">Communication</h4>
+        <p class="features__card-text">Keep every discussion in one place â€” searchable and clear.</p>
+      </div>
+      <div class="features__card" data-anim>
+        <div class="features__icon-bg"><i class="fa-solid fa-file-lines"></i></div>
+        <h4 class="features__card-title">File Management</h4>
+        <p class="features__card-text">Attach documents, share assets, and manage files effortlessly.</p>
+      </div>
+      <div class="features__card" data-anim>
+        <div class="features__icon-bg"><i class="fa-solid fa-chart-pie"></i></div>
+        <h4 class="features__card-title">Reports & Analytics</h4>
+        <p class="features__card-text">Visualize progress with charts and team metrics.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SHOWCASE ===== -->
+  <section class="showcase" id="showcase">
+    <h2 class="showcase__title"><i class="fa-solid fa-wand-magic-sparkles"></i> Discover How It Works</h2>
+    <p class="showcase__desc">Click a module to learn more about how TaskManager simplifies your workflow.</p>
+    <div class="showcase__grid">
+      <a href="/projects" class="showcase__card" data-auth="required"><i class="fa-solid fa-diagram-project showcase__icon"></i><h3>Project Dashboard</h3></a>
+      <a href="/tasks" class="showcase__card" data-auth="required"><i class="fa-solid fa-list-check showcase__icon"></i><h3>Task Board</h3></a>
+      <a href="/users" class="showcase__card" data-auth="required"><i class="fa-solid fa-users showcase__icon"></i><h3>User Management</h3></a>
+      <a href="/reports" class="showcase__card" data-auth="required"><i class="fa-solid fa-chart-pie showcase__icon"></i><h3>Reports & Analytics</h3></a>
+    </div>
+  </section>
+
+  <!-- ===== FEATURE ARTICLE ===== -->
+  <section class="article">
+    <div class="article__container">
+      <header class="article__header" data-anim>
+        <div class="article__eyebrow">Inside TaskManager</div>
+        <h2 class="article__title"><i class="fa-regular fa-newspaper"></i> Feature Deep Dive</h2>
+        <p class="article__meta">~ 5 min read • Recently updated</p>
+        <p class="article__lead">TaskManager helps teams plan work, collaborate smoothly, and track progress in one shared workspace. Here’s a quick tour of the features you’ll use every day.</p>
+      </header>
+
+      <article class="article__content">
+        <section class="article__section" data-anim>
+          <h3><i class="fa-regular fa-lightbulb"></i> Plan Projects Clearly</h3>
+          <p>Create new projects in minutes, add descriptions and timelines, and categorize as <em>Personal</em> or <em>Team</em>. Use status columns to reflect phases like Planning, In Progress, and Completed.</p>
+          <ul>
+            <li>Fast create/edit/delete with a clean modal</li>
+            <li>Drag-and-drop to reorder cards and change status</li>
+            <li>Manage members and roles within the same flow</li>
+          </ul>
+        </section>
+
+        <div class="article__row" data-anim>
+          <figure class="article__figure">
+            <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1600&auto=format&fit=crop" alt="Project planning" />
+            <figcaption>A visual project board keeps everyone aligned at a glance.</figcaption>
+          </figure>
+          <section class="article__section">
+            <h3><i class="fa-solid fa-people-group"></i> Collaborate in Real Time</h3>
+            <p>Assign tasks, discuss in comments, and share files on each task. Subtle toast notifications help you never miss an update.</p>
+            <ul>
+              <li>Thread-like comments with quick delete/edit</li>
+              <li>File uploads with basic history tracking</li>
+              <li>Flexible roles: Member, Leader, Admin</li>
+            </ul>
+          </section>
+        </div>
+
+        <blockquote class="article__quote" data-anim>
+          “TaskManager helped our team cut 40% of time in status meetings.”
+        </blockquote>
+
+        <section class="article__section" data-anim>
+          <h3><i class="fa-solid fa-chart-line"></i> Track & Report</h3>
+          <p>Visit the Reports page for KPIs and simple charts that tell you what’s moving, what’s blocked, and what’s coming next.</p>
+          <ul class="article__callouts">
+            <li><i class="fa-solid fa-circle-check"></i> Clear KPIs (Open, Done, Cycle time)</li>
+            <li><i class="fa-solid fa-circle-check"></i> Per‑project progress with completion %</li>
+            <li><i class="fa-solid fa-circle-check"></i> Workload by assignee to balance effort</li>
+          </ul>
+        </section>
+      </article>
+    </div>
+  </section>
+
+  <!-- ===== HIGHLIGHTS ===== -->
+  <section class="highlights" id="highlights">
+    <h2 class="highlights__title"><i class="fa-solid fa-star"></i> Highlights</h2>
+    <div class="kpis">
+      <div class="kpi" data-anim>
+        <div class="kpi__label">Active teams</div>
+        <div class="kpi__value">48</div>
+      </div>
+      <div class="kpi" data-anim>
+        <div class="kpi__label">Projects managed</div>
+        <div class="kpi__value">320+</div>
+      </div>
+      <div class="kpi" data-anim>
+        <div class="kpi__label">Tasks tracked</div>
+        <div class="kpi__value">12k</div>
+      </div>
+      <div class="kpi" data-anim>
+        <div class="kpi__label">Avg. setup time</div>
+        <div class="kpi__value">2 min</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TESTIMONIALS ===== -->
+  <section class="testimonials" id="testimonials">
+    <h2 class="testimonials__title"><i class="fa-solid fa-quote-left"></i> What teams say</h2>
+    <div class="testimonials__grid">
+      <div class="testimonial" data-anim>
+        <p class="testimonial__text">“We shipped faster and kept everyone aligned. TaskManager became our daily hub.”</p>
+        <div class="testimonial__author"><i class="fa-regular fa-user"></i> Mai Anh — Product Lead</div>
+      </div>
+      <div class="testimonial" data-anim>
+        <p class="testimonial__text">“Boards and reports made status updates painless. Love the clean UI.”</p>
+        <div class="testimonial__author"><i class="fa-regular fa-user"></i> Long — Engineering Manager</div>
+      </div>
+      <div class="testimonial" data-anim>
+        <p class="testimonial__text">“Simple to start, powerful when you need it. Our go-to tool.”</p>
+        <div class="testimonial__author"><i class="fa-regular fa-user"></i> Hà — Designer</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== INTEGRATIONS ===== -->
+  <section class="integrations" id="integrations">
+    <h2 class="integrations__title"><i class="fa-solid fa-plug"></i> Integrations</h2>
+    <p class="integrations__desc">Connect TaskManager with tools your team already uses.</p>
+    <div class="integrations__grid">
+      <div class="integration" data-anim><i class="fa-brands fa-slack"></i> Slack</div>
+      <div class="integration" data-anim><i class="fa-brands fa-github"></i> GitHub</div>
+      <div class="integration" data-anim><i class="fa-brands fa-google-drive"></i> Drive</div>
+      <div class="integration" data-anim><i class="fa-brands fa-jira"></i> Jira</div>
+      <div class="integration" data-anim><i class="fa-regular fa-envelope"></i> Email</div>
+    </div>
+  </section>
+
+  <!-- ===== FAQ ===== -->
+  <section class="faq" id="faq">
+    <h2 class="faq__title"><i class="fa-regular fa-circle-question"></i> Frequently Asked Questions</h2>
+    <div class="faq__list">
+      <details data-anim>
+        <summary>TaskManager có miễn phí không?</summary>
+        <p>Bản demo là miễn phí. Bạn có thể bắt đầu ngay và nâng cấp khi cần thêm tính năng nâng cao.</p>
+      </details>
+      <details data-anim>
+        <summary>Nhóm có thể mời bao nhiêu thành viên?</summary>
+        <p>Không giới hạn trong bản demo. Tạo user trong trang Users để mời thành viên.</p>
+      </details>
+      <details data-anim>
+        <summary>Tôi có thể xuất báo cáo?</summary>
+        <p>Trang Reports cung cấp số liệu tổng quan. Bạn có thể mở rộng thêm xuất file theo nhu cầu.</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- ===== FEATURE ARTICLE ===== -->
+  <section class="article" id="article">
+    <div class="article__container">
+      <header class="article__header" data-anim>
+        <div class="article__eyebrow">Inside TaskManager</div>
+        <h2 class="article__title"><i class="fa-regular fa-newspaper"></i> Giới thiệu chức năng chính</h2>
+        <p class="article__meta">~ 5 phút đọc • Cập nhật gần đây</p>
+        <p class="article__lead">TaskManager giúp đội nhóm lên kế hoạch, cộng tác và theo dõi tiến độ trong một không gian chung. Dưới đây là tổng quan chi tiết về các chức năng bạn sẽ dùng hằng ngày.</p>
+      </header>
+
+      <article class="article__content">
+        <section class="article__section" data-anim>
+          <h3><i class="fa-regular fa-lightbulb"></i> Lập kế hoạch dự án</h3>
+          <p>Tạo project mới trong vài bước, thêm mô tả, mốc thời gian và phân loại <em>Personal</em> hoặc <em>Team</em>. Sử dụng cột trạng thái để sắp xếp theo giai đoạn như Planning, In Progress, Completed.</p>
+          <ul>
+            <li>Tạo/sửa/xoá project nhanh chóng</li>
+            <li>Kéo‑thả thẻ để đổi trạng thái và thứ tự</li>
+            <li>Quản lý thành viên và vai trò ngay trong modal</li>
+          </ul>
+        </section>
+
+        <figure class="article__figure" data-anim>
+          <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1600&auto=format&fit=crop" alt="Project planning" />
+          <figcaption>Bảng project trực quan giúp nắm bắt tiến độ tức thì.</figcaption>
+        </figure>
+
+        <section class="article__section" data-anim>
+          <h3><i class="fa-solid fa-people-group"></i> Cộng tác theo thời gian thực</h3>
+          <p>Phân công nhiệm vụ, thảo luận và chia sẻ tệp ngay trên mỗi task. Thông báo toast giúp bạn không bỏ lỡ cập nhật.</p>
+          <ul>
+            <li>Bình luận theo thread, xoá chỉnh dễ dàng</li>
+            <li>Tải lên tệp đính kèm, theo dõi lịch sử thay đổi</li>
+            <li>Phân quyền linh hoạt: Member, Leader, Admin</li>
+          </ul>
+        </section>
+
+        <blockquote class="article__quote" data-anim>
+          “TaskManager giúp team của chúng tôi giảm 40% thời gian họp cập nhật tiến độ.”
+        </blockquote>
+
+        <section class="article__section" data-anim>
+          <h3><i class="fa-solid fa-chart-line"></i> Theo dõi & báo cáo</h3>
+          <p>Xem KPI tổng quan và bảng thống kê ở trang Reports để biết chính xác việc gì đang diễn ra, việc gì sắp quá hạn.</p>
+          <ul class="article__callouts">
+            <li><i class="fa-solid fa-circle-check"></i> KPI trực quan (Open, Done, Cycle time…)</li>
+            <li><i class="fa-solid fa-circle-check"></i> Bảng tiến độ dự án theo phần trăm hoàn thành</li>
+            <li><i class="fa-solid fa-circle-check"></i> Phân bổ công việc theo từng thành viên</li>
+          </ul>
+        </section>
+      </article>
+    </div>
+  </section>
+
+<!-- ===== HOW IT HELPS ===== -->
+<section class="workflow">
+  <h2 class="workflow__title"><i class="fa-solid fa-sitemap"></i> How TaskManager Empowers Your Team</h2>
+  <div class="workflow__steps">
+    <div class="workflow__step">
+      <img src="https://cdn-icons-png.flaticon.com/512/4213/4213754.png" alt="Plan" />
+      <h3>Plan Clearly</h3>
+      <p>Define project goals, timelines, and milestones with clarity.</p>
+    </div>
+    <div class="workflow__step">
+      <img src="https://cdn-icons-png.flaticon.com/512/1040/1040233.png" alt="Collaborate" />
+      <h3>Collaborate Easily</h3>
+      <p>Work together in real-time and share updates instantly.</p>
+    </div>
+    <div class="workflow__step">
+      <img src="https://cdn-icons-png.flaticon.com/512/1828/1828640.png" alt="Track" />
+      <h3>Track Progress</h3>
+      <p>Monitor project health and stay aligned with your goals.</p>
+    </div>
+    <div class="workflow__step">
+      <img src="https://cdn-icons-png.flaticon.com/512/2490/2490313.png" alt="Deliver" />
+      <h3>Deliver Results</h3>
+      <p>Finish strong â€” analyze outcomes and optimize your workflow.</p>
+    </div>
+  </div>
+</section>
+
+
+  <!-- ===== ABOUT (replaces pricing) ===== -->
+    <section class="about">
+    <h2 class="about__title">About TaskManager</h2>
+    <div class="about__grid">
+      <div class="about__card">
+        <h3>Our Mission</h3>
+        <p class="about__desc">Help teams organize work, collaborate smoothly and track progress in a single place.</p>
+        <ul class="about__list">
+          <li><i class="fa-solid fa-check"></i> Notes, boards and calendar in one</li>
+          <li><i class="fa-solid fa-check"></i> Secure file sharing and discussions</li>
+          <li><i class="fa-solid fa-check"></i> Visual progress tracking</li>
+        </ul>
+      </div>
+      <div class="about__card about__card--accent">
+        <h3>Core Values</h3>
+        <p class="about__desc">Focus on productivity, transparency and scalability.</p>
+        <ul class="about__list">
+          <li><i class="fa-solid fa-check"></i> Easy to use, quick to deploy</li>
+          <li><i class="fa-solid fa-check"></i> Real‑time insights and reporting</li>
+          <li><i class="fa-solid fa-check"></i> Grows with your team</li>
+        </ul>
+      </div>
+      <div class="about__card">
+        <h3>Main Features</h3>
+        <p class="about__desc">Project and task management with integrated reporting and integrations.</p>
+        <ul class="about__list">
+          <li><i class="fa-solid fa-check"></i> Projects, Tasks, Reports</li>
+          <li><i class="fa-solid fa-check"></i> Powerful search, tags and filters</li>
+          <li><i class="fa-solid fa-check"></i> Popular integrations & API</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CTA ===== -->
+  <section class="cta">
+    <h2 class="cta__title">Ready to boost your teamâ€™s productivity?</h2>
+    <p class="cta__desc">Start organizing your work in minutes with TaskManager.</p>
+    <button class="btn btn--white" data-auth="required"><i class="fa-solid fa-rocket"></i> Try for Free</button>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <div class="footer__container">
+      <div class="footer__col footer__about">
+        <h3>TaskManager</h3>
+        <p>The ultimate workspace for managing projects, tracking tasks, and empowering teamwork.</p>
+      </div>
+      <div class="footer__col footer__links">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#top" class="footer__link">Home</a></li>
+          <li><a href="/projects" class="footer__link" data-auth="required">Projects</a></li>
+          <li><a href="tasks.html" class="footer__link" data-auth="required">Tasks</a></li>
+          <li><a href="reports.html" class="footer__link" data-auth="required">Reports</a></li>
+        </ul>
+      </div>
+      <div class="footer__col footer__contact">
+        <h4>Contact</h4>
+        <p>Email: support@taskmanager.com</p>
+        <p>Phone: +84 123 456 789</p>
+        <div class="footer__social">
+          <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#"><i class="fa-brands fa-twitter"></i></a>
+          <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
+          <a href="#"><i class="fa-brands fa-github"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <p>Â© 2025 TaskManager | Designed by <strong>Pham Canh Lam</strong></p>
+    </div>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add("show"); });
+    });
+    document.querySelectorAll("[data-anim]").forEach(el => observer.observe(el));
+    // Runtime text fixes for encoding/English copy
+    (function(){
+      const hero = document.querySelector('.hero__desc');
+      if (hero) hero.textContent = 'Turn chaos into clarity with TaskManager — your all‑in‑one workspace for team productivity.';
+      const cta = document.querySelector('.cta__title');
+      if (cta) cta.textContent = "Ready to boost your team's productivity?";
+      const fb = document.querySelector('.footer__bottom p');
+      if (fb) fb.innerHTML = '© 2025 TaskManager | Designed by <strong>Pham Canh Lam</strong>';
+      const loginA = document.querySelector('.header__actions a[href="login.html"]');
+      if (loginA) loginA.setAttribute('aria-label','Log in');
+      const regA = document.querySelector('.header__actions a[href="register.html"]');
+      if (regA) regA.setAttribute('aria-label','Sign up');
+      document.title = 'TaskManager - Home';
+      // Remove any duplicate feature-article sections (keep the first one)
+      const arts = document.querySelectorAll('section.article');
+      if (arts.length > 1) { for (let i = 1; i < arts.length; i++) { arts[i].remove(); } }
+    })();
+  </script>
+</body>
+</html>
+
+
+
+
+
+
