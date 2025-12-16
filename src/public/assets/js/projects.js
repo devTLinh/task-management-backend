@@ -140,7 +140,7 @@
         });
 
         list
-            .filter((p) => (filterType === 'all' ? true : (p.Type || '').toLowerCase() === filterType))
+            //.filter((p) => (filterType === 'all' ? true : (p.Type || '').toLowerCase() === filterType))
             .forEach((p) => {
                 const card = document.createElement('div');
                 card.className = 'card';
@@ -296,7 +296,7 @@
             return;
         }
 
-        const userId = Number(el('#memberUserId').value);
+        const userId = Number(el('#memberName').value);
         const role = el('#memberRole').value;
 
         if (!userId) {
@@ -332,6 +332,7 @@
         const me = await apiGetMe();
         if (me.errorCode === 0 && me.user) {
             window.currentUserId = me.user.UserID;
+            window.currentUserRole = me.user.Role;
         } else {
             showToast("Cannot get user info", "error");
             window.currentUserId = null;
@@ -347,7 +348,9 @@
             switchTab('info');
             showModal();
         });
-
+        if (window.currentUserRole === 'Member') {
+            el('#btnNewProject').style.display = 'none';
+        }
         document.querySelectorAll('.tab').forEach((t) =>
             t.addEventListener('click', () => switchTab(t.dataset.tab))
         );
@@ -359,5 +362,9 @@
         el('#projectForm').addEventListener('submit', saveProject);
         el('#btnDeleteProject').addEventListener('click', deleteProject);
         el('#btnAddMember').addEventListener('click', addMember);
+        if (window.currentUserRole === 'Member') {
+            document.querySelector('.tabpane[data-pane="members"] .filters').style.display = 'none';
+        }
+
     });
 })();

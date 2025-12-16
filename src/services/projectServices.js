@@ -176,11 +176,16 @@ let getAllProjects = () => {
          let data = await db.Project.findAll(
             {
                include: [
-                  {
-                     model: db.User,
-                     as: 'Creator',
-                     attributes: ['UserName', 'FullName', 'Email', 'Role']
-                  }
+                    {
+                        model: db.User,
+                        as: 'Creator',
+                        attributes: ['UserName', 'FullName', 'Email', 'Role']
+                    },
+                    {
+                        model: db.User,
+                        as: 'Members',
+                        attributes: ['UserID','UserName', 'FullName', 'Email', 'Role']
+                    }
                ]
             }
          );

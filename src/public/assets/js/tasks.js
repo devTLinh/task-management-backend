@@ -61,11 +61,11 @@
     // Giả định server có /api/me trả về user hiện tại
     const getCurrentUser = async () => {
         const res = await api.get('/api/me');
-        if (!res) return { name: 'User', userId: 0, role: 'Member' };
+        if (!res.user) return { name: 'User', userId: 0, role: 'Member' };
         return {
-            name: res.FullName || res.UserName || 'User',
-            userId: res.UserID,
-            role: res.RoleName || 'Member',
+            name: res.user.FullName,
+            userId: res.user.UserID,
+            role: res.user.Role
         };
     };
 
@@ -82,7 +82,8 @@
         title: raw.Title,
         description: raw.Description || '',
         dueDate: raw.DueDate || '',
-        assignedTo: raw.AssignedToName || '',
+        assignedTo: raw.AssignedTo || '',
+        assignedToName: raw.Assignee?.FullName || '',
         priority: raw.Priority || 'Medium',
         status: raw.Status || 'ToDo',
         createdAt: raw.CreatedAt,
@@ -92,7 +93,8 @@
 
     const normalizeProject = (raw) => ({
         id: raw.ProjectID,
-        name: raw.ProjectName,
+        name: raw.Name,
+        member: raw.Members || []
     });
 
     const normalizeComment = (raw) => ({
@@ -139,7 +141,7 @@
             Title: obj.title,
             Description: obj.description,
             DueDate: obj.dueDate,
-            AssignedToName: obj.assignedTo,
+            AssignedTo: obj.assignedTo,
             Priority: obj.priority,
             Status: obj.status,
         };
@@ -154,12 +156,12 @@
             Title: obj.title,
             Description: obj.description,
             DueDate: obj.dueDate,
-            AssignedToName: obj.assignedTo,
+            AssignedTo: obj.assignedTo,
             Priority: obj.priority,
             Status: obj.status,
             Order: obj.order ?? 0,
         };
-        const res = await api.put('/update-task-by-id', payload);
+        const res = await api.put('/api/update-task-by-id', payload);
         return res ? normalizeTask(res) : null;
     };
 
@@ -231,8 +233,9 @@
         return list.map(normalizeHistory);
     };
 
-    const createHistory = async (taskId, field, oldValue, newValue) => {
+    const createHistory = async (userId,taskId, field, oldValue, newValue) => {
         await api.post('/api/create-task-history', {
+            UserID: userId,
             TaskID: taskId,
             ChangedField: field,
             OldValue: oldValue,
@@ -242,11 +245,6 @@
 
     // ---------- PROJECT NAME HELPER ----------
     let projectsCache = [];
-    const getProjectName = (id) => {
-        const p = projectsCache.find((x) => x.id === id);
-        return p ? p.name : '';
-    };
-
     const statusClass = (s) => ({
         ToDo: 'status--todo',
         InProgress: 'status--inprogress',
@@ -266,15 +264,32 @@
             .join('');
     };
 
-    const renderAssigneesSelect = (projectId, selectedName = '') => {
-        const sel = el('#taskAssignee');
-        if (!sel) return;
-        // Tạm thời: assignee là free-text; nếu sau này anh có API projectMembers thì map từ đó
+    // project = { id, name, member: [ { UserID, FullName, ... }, ... ] }
+
+    const renderAssigneesSelect = (selectEl, projectId, selectedUserId, selectedUserName) => {
+        if (!selectEl) return;
+
+        // Tìm project theo id trong cache
+        const project = projectsCache.find(p => String(p.id) === String(projectId));
+
+        // Nếu không có project hoặc không có member → chỉ hiển thị Unassigned
+        if (!project || !Array.isArray(project.member)) {
+            selectEl.innerHTML = `<option value="">Unassigned</option>`;
+            return;
+        }
+
         const opts = [
-            '<option value="">Unassigned</option>',
-            selectedName ? `<option value="${escapeHtml(selectedName)}" selected>${escapeHtml(selectedName)}</option>` : '',
-        ].filter(Boolean);
-        sel.innerHTML = opts.join('');
+            `<option value="">Unassigned</option>`,
+            ...project.member.map(m => {
+                const id = String(m.UserID ?? '');
+                const name = String(m.FullName ?? m.UserName ?? '');
+                const selectedAttr = id === String(selectedUserId) ? ' selected' : '';
+                return `<option value="${escapeHtml(id)}"${selectedAttr}>${escapeHtml(name)}</option>`;
+            }),
+        ];
+        if (selectedUserId) opts.push(
+            `<option value="${escapeHtml(String(selectedUserId))}">${escapeHtml(selectedUserName)}</option>`);
+        selectEl.innerHTML = opts.join('');
     };
 
     // ---------- STATE CACHE ----------
@@ -293,7 +308,7 @@
                     (pr === 'all' || t.priority === pr) &&
                     (!q ||
                         (t.title || '').toLowerCase().includes(q) ||
-                        (t.assignedTo || '').toLowerCase().includes(q)),
+                        (t.assignedToName || '').toLowerCase().includes(q)),
             )
             .sort((a, b) => {
                 if (tableSort.by === 'priority') {
@@ -312,7 +327,7 @@
                 return `<tr data-id="${t.id}">
           <td>${escapeHtml(t.title)}</td>
           <td>${projName}</td>
-          <td>${escapeHtml(t.assignedTo || '')}</td>
+          <td>${escapeHtml(t.assignedToName || '')}</td>
           <td>${escapeHtml(t.dueDate || '')}</td>
           <td><span class="${tagClass}">${escapeHtml(t.priority || '')}</span></td>
           <td><span class="status ${cls}">${escapeHtml(
@@ -339,7 +354,7 @@
                     (pr === 'all' || t.priority === pr) &&
                     (!q ||
                         (t.title || '').toLowerCase().includes(q) ||
-                        (t.assignedTo || '').toLowerCase().includes(q)),
+                        (t.assignedToName || '').toLowerCase().includes(q)),
             )
             .sort((a, b) => {
                 if (a.status === b.status) {
@@ -374,7 +389,7 @@
             card.innerHTML = `<div class="card__title">${escapeHtml(
                 t.title,
             )}</div><div class="card__meta"><span class="tag"><i class="fa-regular fa-folder"></i>${projName}</span><span class="tag">${escapeHtml(
-                t.assignedTo || '',
+                t.assignedToName || '',
             )}</span><span class="tag">${escapeHtml(t.priority || '')}</span><span class="tag">${escapeHtml(
                 t.dueDate || '',
             )}</span></div>`;
@@ -460,7 +475,7 @@
                 if (!t) return;
 
                 if (!hasRole('Manager')) {
-                    if ((t.assignedTo || '').trim() !== currentUser.name.trim()) {
+                    if ((t.assignedToName || '').trim() !== currentUser.name.trim()) {
                         window.showToast &&
                             showToast('You can only move your assigned tasks', 'error');
                         return;
@@ -482,7 +497,7 @@
                 await changeTaskStatus(t.id, newStatus, t.order);
 
                 if (oldStatus !== newStatus) {
-                    await createHistory(t.id, 'status', oldStatus, newStatus);
+                    await createHistory(currentUser.userId, t.id, 'status', oldStatus, newStatus);
                     window.showToast && showToast('Status changed', 'info');
                 }
 
@@ -511,11 +526,11 @@
     const resetForm = () => {
         el('#taskId').value = '';
         renderProjectsSelect(el('#taskProject'));
-        renderAssigneesSelect(el('#taskProject').value, '');
+        renderAssigneesSelect(el('#taskAssignee'));
         el('#taskTitle').value = '';
         el('#taskDesc').value = '';
         el('#taskDue').value = '';
-        el('#taskAssignee').value = '';
+        //el('#taskAssignee').value = '';
         el('#taskPrioritySelect').value = 'Medium';
         el('#taskStatusSelect').value = 'ToDo';
         el('#commentList').innerHTML = '';
@@ -525,9 +540,7 @@
 
     // ---------- COMMENTS / FILES / HISTORY RENDER ----------
     const loadCommentsUI = async (taskId) => {
-        console.log('Comments click');
         const list = await fetchComments(taskId);
-        console.log('Comments for task', taskId, list);
         const ul = el('#commentList');
         ul.innerHTML = list
             .map(
@@ -611,16 +624,15 @@
         el('#taskModalTitle').textContent = t ? 'Edit task' : 'New task';
         switchTab('task-info');
         resetForm();
-        console.log('Open edit for task', id, t);
         if (t) {
             el('#taskId').value = t.id;
             renderProjectsSelect(el('#taskProject'));
-            el('#taskProject').value = t.projectId || '';
-            renderAssigneesSelect(el('#taskProject').value, t.assignedTo || '');
+            el('#taskProject').value = t.projectId;
+            renderAssigneesSelect(el('#taskAssignee'), t.projectId, t.assignedTo, t.assignedToName);
             el('#taskTitle').value = t.title || '';
             el('#taskDesc').value = t.description || '';
             el('#taskDue').value = t.dueDate || '';
-            el('#taskAssignee').value = t.assignedTo || '';
+            el('#taskAssignee').value = t.assignedTo;
             el('#taskPrioritySelect').value = t.priority || 'Medium';
             el('#taskStatusSelect').value = t.status || 'ToDo';
 
@@ -629,7 +641,7 @@
             await loadHistoryUI(t.id);
         } else {
             renderProjectsSelect(el('#taskProject'));
-            renderAssigneesSelect(el('#taskProject').value, '');
+            renderAssigneesSelect(el('#taskAssignee'));
         }
         showModal();
     };
@@ -647,7 +659,7 @@
         });
         if (!changes.length) return;
         for (const c of changes) {
-            await createHistory(newObj.id, c.field, c.oldValue, c.newValue);
+            await createHistory(currentUser.userId, newObj.id, c.field, c.oldValue, c.newValue);
         }
     };
 
@@ -709,7 +721,7 @@
 
         projSel &&
             projSel.addEventListener('change', () =>
-                renderAssigneesSelect(projSel.value, ''),
+                renderAssigneesSelect(el('#taskAssignee'),projSel.value)
             );
 
         const setView = (board) => {
@@ -754,7 +766,7 @@
                 title: el('#taskTitle').value.trim(),
                 description: el('#taskDesc').value.trim(),
                 dueDate: el('#taskDue').value,
-                assignedTo: el('#taskAssignee').value.trim(),
+                assignedTo: el('#taskAssignee').value,
                 priority: el('#taskPrioritySelect').value,
                 status: el('#taskStatusSelect').value,
             };
@@ -768,7 +780,7 @@
             const existing = isEdit
                 ? tasksCache.find((x) => String(x.id) === String(obj.id))
                 : null;
-
+            console.log('Existing task:', existing);
             if (existing) {
                 if (!hasRole('Manager')) {
                     if ((existing.assignedTo || '').trim() !== currentUser.name.trim()) {

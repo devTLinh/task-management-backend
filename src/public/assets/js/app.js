@@ -134,7 +134,7 @@
           <span class="profile__name">${name}</span>
           <i class="fa-solid fa-caret-down profile__caret" aria-hidden="true"></i>
           <div class="user-dropdown" role="menu">
-            <a href="account.html" class="user-dropdown__item" role="menuitem">
+            <a href="/account" class="user-dropdown__item" role="menuitem">
               <i class="fa-regular fa-user"></i> Profile
             </a>
             <button class="user-dropdown__item user-dropdown__logout" type="button" role="menuitem">

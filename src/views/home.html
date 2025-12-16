@@ -400,8 +400,8 @@
         <ul>
           <li><a href="#top" class="footer__link">Home</a></li>
           <li><a href="/projects" class="footer__link" data-auth="required">Projects</a></li>
-          <li><a href="tasks.html" class="footer__link" data-auth="required">Tasks</a></li>
-          <li><a href="reports.html" class="footer__link" data-auth="required">Reports</a></li>
+          <li><a href="/tasks" class="footer__link" data-auth="required">Tasks</a></li>
+          <li><a href="/reports" class="footer__link" data-auth="required">Reports</a></li>
         </ul>
       </div>
       <div class="footer__col footer__contact">
@@ -434,9 +434,9 @@
       if (cta) cta.textContent = "Ready to boost your team's productivity?";
       const fb = document.querySelector('.footer__bottom p');
       if (fb) fb.innerHTML = '© 2025 TaskManager | Designed by <strong>Pham Canh Lam</strong>';
-      const loginA = document.querySelector('.header__actions a[href="login.html"]');
+      const loginA = document.querySelector('.header__actions a[href="/login"]');
       if (loginA) loginA.setAttribute('aria-label','Log in');
-      const regA = document.querySelector('.header__actions a[href="register.html"]');
+      const regA = document.querySelector('.header__actions a[href="/register"]');
       if (regA) regA.setAttribute('aria-label','Sign up');
       document.title = 'TaskManager - Home';
       // Remove any duplicate feature-article sections (keep the first one)

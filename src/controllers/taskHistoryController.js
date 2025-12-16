@@ -3,11 +3,11 @@ const taskHistoryService = require('../services/taskHistoryService');
 module.exports = {
     async createHistory(req, res) {
         try {
-            const { TaskID, ChangedField, OldValue, NewValue } = req.body;
+            const {UserID, TaskID, ChangedField, OldValue, NewValue } = req.body;
 
             const result = await taskHistoryService.createHistory(
                 TaskID,
-                req.user.UserID,
+                UserID,
                 ChangedField,
                 OldValue,
                 NewValue

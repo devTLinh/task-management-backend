@@ -18,18 +18,16 @@ let postCreateProjectMember = (data) => {
                   errorMessage: `Missing parameters: ${check.element}`
                })
             } else {
-               let [projectMember, checkInValid] = await db.projectMember.findOrCreate({
+               let [projectMember, checkInValid] = await db.ProjectMember.findOrCreate({
                   where: {
-                     projectId: data.projectId,
-                     userId: data.userId,
-                     role: data.role,
-                     joinedAt: data.joinedAt
+                     ProjectID: data.projectId,
+                     UserID: data.userId
                   },
                   defaults: {
-                     projectId: data.projectId,
-                     userId: data.userId,
-                     role: data.role,
-                     joinedAt: data.joinedAt
+                     ProjectID: data.projectId,
+                     UserID: data.userId,
+                     Role: data.role,
+                     JoinedAt: data.joinedAt
                   }
                })
                if(checkInValid) {

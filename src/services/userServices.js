@@ -306,8 +306,6 @@ let postLogin = (data) => {
                     errorMessage: 'User not found or email not exist !'
                 });
             }
-            let hashedPassword = await hashValue("123456");
-            console.log("pass:", hashedPassword);
             let checkPassword = bcrypt.compareSync(data.password, user.PasswordHash);
             if (!checkPassword) {
                 return resolve({

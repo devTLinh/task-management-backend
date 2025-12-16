@@ -10,7 +10,6 @@ module.exports = {
             NewValue: newValue,
             ChangedAt: new Date()
         });
-
         return db.TaskHistory.findOne({
             where: { HistoryID: history.HistoryID },
             include: [{ model: db.User, as: 'Changer', attributes: ['FullName'] }]

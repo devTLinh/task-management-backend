@@ -263,21 +263,21 @@ let getSearchTaskByTitleStatus = (query) => {
 let putUpdateTask = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const { id, projectId, assignedTo, title, description, priority, dueDate } = data;
-            if (!id) {
+            const { TaskID, ProjectID, AssignedTo, Title, Description, Priority, DueDate } = data;
+            if (!TaskID) {
                 resolve({ errorCode: 1, errorMessage: 'Missing task ID' });
             } else {
-                let task = await db.Task.findOne({ where: { TaskID: id } });
+                let task = await db.Task.findOne({ where: { TaskID: TaskID } });
                 if (!task) {
                     resolve({ errorCode: 2, errorMessage: 'Task not found' });
                 } else {
                     // Cập nhật tất cả các trường
-                    task.ProjectID = projectId || task.ProjectID;
-                    task.AssignedTo = assignedTo || task.AssignedTo;
-                    task.Title = title || task.Title;
-                    task.Description = description || task.Description;
-                    task.Priority = priority || task.Priority;
-                    task.DueDate = dueDate || task.DueDate;
+                    task.ProjectID = ProjectID || task.ProjectID;
+                    task.AssignedTo = AssignedTo || task.AssignedTo;
+                    task.Title = Title || task.Title;
+                    task.Description = Description || task.Description;
+                    task.Priority = Priority || task.Priority;
+                    task.DueDate = DueDate || task.DueDate;
                     // LƯU Ý: Không nên cho phép cập nhật Status/Priority ở đây, mà dùng PATCH riêng
                     // Nếu bạn muốn gộp: task.Status = data.status || task.Status; 
 
@@ -292,14 +292,14 @@ let putUpdateTask = (data) => {
 }
 let patchChangeStatusTaskById = (data) => {
    return new Promise(async (resolve, reject) => {
-      try {
+       try {
          if(_.isEmpty(data)) {
             resolve({
                errorCode: 1,
                errorMessage: 'Missing data'
             })
          } else {
-            let check = checkIsValidInput(data, ['id']);
+             let check = checkIsValidInput(data, ['TaskID', 'Status' ]);
             if(!check.isValid) {
                resolve({
                   errorCode: 2,
@@ -308,24 +308,25 @@ let patchChangeStatusTaskById = (data) => {
             } else {
                let task = await db.Task.findOne(
                   { 
-                     where: {TaskID: data.id},
+                       where: { TaskID: data.TaskID },
                      include: [
                         { model: db.Project, attributes: ['Name', 'Description', 'Status', 'StartDate', 'EndDate'] },
                          { model: db.User, as: 'Assignee', attributes: ['UserName', 'Email', 'FullName', 'Role'] }
                      ]
                   }
-               );
+                );
+                console.log('task:', task);
                if(!task) {
                   resolve({
                      errorCode: 3,
                      errorMessage: 'Task not found'
                   })
                } else {
-                  if(data.status) {
-                     task.Status = data.status
+                  if(data.Status) {
+                     task.Status = data.Status
                   }
                   if(data.priority) {
-                     task.Priority = data.priority;
+                     task.Priority = data.Priority;
                   }
                   await task.save();
                   resolve({

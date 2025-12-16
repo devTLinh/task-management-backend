@@ -41,7 +41,7 @@ let getTaskByIdOrAssigntedTo = async (req, res) => {
 
 let deleteTaskById = async (req, res) => {
    try {
-      let data = await taskServices.deleteTaskById(req.query.id);
+      let data = await taskServices.deleteTaskById(req.body.id);
       return res.status(200).json(data);
    } catch (error) {
       console.log(error);
@@ -54,7 +54,7 @@ let deleteTaskById = async (req, res) => {
 
 let getSearchTaskByTitleStatus = async (req, res) => {
    try {
-      let data = await taskServices.getSearchTaskByTitleStatus(req.query);
+      let data = await taskServices.getSearchTaskByTitleStatus(req.body);
       return res.status(200).json(data);
    } catch (error) {
       console.log(error);
@@ -67,7 +67,7 @@ let getSearchTaskByTitleStatus = async (req, res) => {
 
 let patchChangeStatusTaskById = async (req, res) => {
    try {
-      let data = await taskServices.patchChangeStatusTaskById(req.query);
+      let data = await taskServices.patchChangeStatusTaskById(req.body);
       return res.status(200).json(data);
    } catch (error) {
       console.log(error);
@@ -79,7 +79,7 @@ let patchChangeStatusTaskById = async (req, res) => {
 }
 let putUpdateTask = async (req, res) => {
     try {
-        let data = await taskServices.putUpdateTask(req.query);
+        let data = await taskServices.putUpdateTask(req.body);
         return res.status(200).json(data);
     } catch (error) {
         console.log(error);
@@ -91,7 +91,7 @@ let putUpdateTask = async (req, res) => {
 }
 let getAllTaskByProjectId = async (req, res) => {
    try {
-      let data = await taskServices.getAllTaskByProjectId(req.query.projectId);
+      let data = await taskServices.getAllTaskByProjectId(req.body.projectId);
       return res.status(200).json(data);
    } catch (error) {
       console.log(error);

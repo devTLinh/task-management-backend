@@ -32,7 +32,6 @@
         <div class="filters toolbar">
             <select id="filterType">
                 <option value="all">All types</option>
-                <option value="personal">Personal projects</option>
                 <option value="team">Team projects</option>
             </select>
             <button id="btnNewProject" class="btn btn--primary"><i class="fa-solid fa-plus"></i> New Project</button>
@@ -101,7 +100,6 @@
                             <label>
                                 Project type
                                 <select id="projType">
-                                    <option value="personal">Personal</option>
                                     <option value="team">Team</option>
                                 </select>
                             </label>
@@ -129,8 +127,10 @@
                         <div class="filters">
                             <input type="text" id="memberName" placeholder="Member name" />
                             <select id="memberRole">
-                                <option value="Leader">Leader</option>
-                                <option value="Member">Member</option>
+                                <option value="ProjectManager">Project Manager</option>
+                                <option value="TeamLead">Team Lead</option>
+                                <option value="Developer">Developer</option>
+                                <option value="Viewer">Viewer</option>
                             </select>
                             <button class="btn btn--primary" id="btnAddMember"><i class="fa-solid fa-user-plus"></i> Add member</button>
                         </div>

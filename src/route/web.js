@@ -77,7 +77,7 @@ let initWebRoutes = (app) => {
    // API task
     router.post('/api/create-task', taskController.postCreateTask);
     router.get('/api/get-all-tasks', taskController.getAllTasks);
-    router.put('/update-task-by-id', taskController.putUpdateTask); 
+    router.put('/api/update-task-by-id', taskController.putUpdateTask); 
     //router.get('/api/get-task-by-id', taskController.getTaskById);
     router.delete('/api/delete-task-by-id', taskController.deleteTaskById);
     router.get('/api/search-tasks-by-title-status', taskController.getSearchTaskByTitleStatus)
