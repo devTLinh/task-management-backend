@@ -137,13 +137,13 @@
 
     const createTask = async (obj) => {
         const payload = {
-            ProjectID: obj.projectId,
-            Title: obj.title,
-            Description: obj.description,
-            DueDate: obj.dueDate,
-            AssignedTo: obj.assignedTo,
-            Priority: obj.priority,
-            Status: obj.status,
+            projectId: obj.projectId,
+            title: obj.title,
+            description: obj.description,
+            dueDate: obj.dueDate,
+            assignedTo: obj.assignedTo,
+            priority: obj.priority,
+            status: obj.status,
         };
         const res = await api.post('/api/create-task', payload);
         return res ? normalizeTask(res) : null;
@@ -194,13 +194,14 @@
 
     const createComment = async (taskId, text) => {
         await api.post('/api/create-comment', {
-            TaskID: taskId,
-            CommentText: text,
+            taskId: taskId,
+            content: text,
+            userId: currentUser.userId
         });
     };
 
     const deleteComment = async (commentId) => {
-        await api.delete(`/api/delete-comment-by-id?CommentID=${encodeURIComponent(commentId)}`);
+        await api.delete(`/api/delete-comment-by-id?id=${encodeURIComponent(commentId)}`);
     };
 
     const fetchFiles = async (taskId) => {
@@ -213,6 +214,7 @@
         const formData = new FormData();
         formData.append('TaskID', taskId);
         formData.append('file', file);
+        formData.append('UserID', currentUser.userId);
         const res = await fetch('/api/upload-file', {
             method: 'POST',
             credentials: 'include',
@@ -497,7 +499,7 @@
                 await changeTaskStatus(t.id, newStatus, t.order);
 
                 if (oldStatus !== newStatus) {
-                    await createHistory(currentUser.userId, t.id, 'status', oldStatus, newStatus);
+                    await createHistory(currentUser.userId, t.id, 'status', oldStatus, newStatus); 
                     window.showToast && showToast('Status changed', 'info');
                 }
 
@@ -647,21 +649,23 @@
     };
 
     // ---------- RECORD HISTORY CHANGES ----------
-    const recordHistoryChanges = async (oldObj, newObj) => {
-        const fields = ['title', 'description', 'dueDate', 'assignedTo', 'priority', 'status', 'projectId'];
-        const changes = [];
-        fields.forEach((f) => {
-            const oldVal = oldObj ? oldObj[f] : undefined;
-            const newVal = newObj[f];
-            if (oldObj && oldVal === newVal) return;
-            if (!oldObj && (newVal === undefined || newVal === '')) return;
-            changes.push({ field: f, oldValue: oldVal, newValue: newVal });
-        });
-        if (!changes.length) return;
-        for (const c of changes) {
-            await createHistory(currentUser.userId, newObj.id, c.field, c.oldValue, c.newValue);
-        }
-    };
+    //const recordHistoryChanges = async (oldObj, newObj) => {
+    //    const fields = ['title', 'description', 'dueDate', 'assignedTo', 'priority', 'status', 'projectId'];
+    //    const changes = [];
+    //    fields.forEach((f) => {
+    //        const oldVal = oldObj ? oldObj[f] : undefined;
+    //        const newVal = newObj[f];
+    //        if (oldObj && oldVal === newVal) return;
+    //        if (!oldObj && (newVal === undefined || newVal === '')) return;
+    //        changes.push({ field: f, oldValue: oldVal, newValue: newVal });
+    //    });
+    //    if (!changes.length) return;
+    //    for (const c of changes) {
+    //        console.log('Recording history change:', c);
+    //        await createHistory(currentUser.userId, newObj.id, c.field, c.oldValue, c.newValue);
+    //    }
+    //};
+   
 
     // ---------- INIT ----------
     ready(async () => {
@@ -760,6 +764,7 @@
             const idStr = el('#taskId').value;
             const isEdit = !!idStr;
             const projectId = el('#taskProject').value;
+            console.log('projectId:', projectId);
             const obj = {
                 id: isEdit ? Number(idStr) : undefined,
                 projectId: projectId ? Number(projectId) : null,
@@ -780,7 +785,6 @@
             const existing = isEdit
                 ? tasksCache.find((x) => String(x.id) === String(obj.id))
                 : null;
-            console.log('Existing task:', existing);
             if (existing) {
                 if (!hasRole('Manager')) {
                     if ((existing.assignedTo || '').trim() !== currentUser.name.trim()) {
@@ -789,7 +793,6 @@
                         return;
                     }
                 }
-                await recordHistoryChanges(existing, { ...existing, ...obj, id: existing.id });
                 const updated = await updateTask({ ...existing, ...obj, id: existing.id });
                 if (updated) {
                     const idx = tasksCache.findIndex((t) => t.id === updated.id);
@@ -804,7 +807,6 @@
                 }
                 const created = await createTask(obj);
                 if (created) {
-                    await recordHistoryChanges(null, created);
                     tasksCache.push(created);
                 }
                 window.showToast && showToast('Task created', 'success');

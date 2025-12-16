@@ -3,12 +3,12 @@ const fileService = require('../services/fileService');
 module.exports = {
     async uploadFile(req, res) {
         try {
-            const { TaskID } = req.body;
+            const { TaskID, UserID } = req.body;
             const file = req.file;
 
             if (!file) return res.status(400).json({ message: 'No file uploaded' });
 
-            const result = await fileService.uploadFile(TaskID, file, req.user.UserID);
+            const result = await fileService.uploadFile(TaskID, file, UserID);
             res.json(result);
         } catch (err) {
             console.error(err);

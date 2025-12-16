@@ -19,7 +19,7 @@ let postCreateComment = (data) => {
                   errorMessage: `Missing parameter: ${check.element}`
                })
             } else {
-               let checkComment = await db.comment.findOne({
+               let checkComment = await db.Comment.findOne({
                   where: {
                      [Op.and]: [
                         {UserId: {[Op.eq]: data.userId}},
@@ -33,7 +33,7 @@ let postCreateComment = (data) => {
                      errorMessage: `Comment by userId exist. Plz a new comment`
                   })
                } else {
-                  await db.comment.create({
+                  await db.Comment.create({
                      TaskID: data.taskId,
                      UserID: data.userId,
                      Content: data.content

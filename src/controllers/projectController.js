@@ -28,7 +28,7 @@ let putEditProject = async (req, res) => {
 
 let patchUpdateStatusProject = async (req, res) => {
    try {
-      let data = await projectServices.patchUpdateStatusProject(req.query);
+      let data = await projectServices.patchUpdateStatusProject(req.body);
       return res.status(200).json(data);
    } catch (error) {
       console.log(error);
@@ -66,8 +66,8 @@ let getProjectByIdOrCreatedBy = async (req, res) => {
 }
 
 let deleteProject = async (req, res) => {
-   try {
-      let data = await projectServices.deleteProject(req.query.id);
+    try {
+        let data = await projectServices.deleteProject(req.query.id);
       return res.status(200).json(data);
    } catch (error) {
       console.log(error);
@@ -80,7 +80,7 @@ let deleteProject = async (req, res) => {
 
 let getSearchProjectsByName = async (req, res) => {
    try {
-      let data = await projectServices.getSearchProjectsByName(req.query);
+      let data = await projectServices.getSearchProjectsByName(req.body);
       return res.status(200).json(data);
    } catch (error) {
       console.log(error);

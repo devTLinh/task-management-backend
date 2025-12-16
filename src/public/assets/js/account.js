@@ -230,12 +230,12 @@
             .map(
                 (u) => `
       <tr data-id="${u.UserID}">
-        <td>${escapeHtml(u.FullName)}</td>
-        <td>${escapeHtml(u.Email || '')}</td>
+        <td class="fullname">${escapeHtml(u.FullName)}</td>
+        <td class="email">${escapeHtml(u.Email || '')}</td>
         <td>
           <select class="roleSel">
             <option ${u.Role === 'Member' ? 'selected' : ''}>Member</option>
-            <option ${u.Role === 'Leader' ? 'selected' : ''}>Leader</option>
+            <option ${u.Role === 'Manager' ? 'selected' : ''}>Manager</option>
             <option ${u.Role === 'Admin' ? 'selected' : ''}>Admin</option>
           </select>
         </td>
@@ -250,10 +250,15 @@
                 const tr = btn.closest('tr');
                 const id = tr.dataset.id;
                 const newRole = tr.querySelector('.roleSel').value;
-
+                const email = tr.querySelector('.email').textContent.trim();
+                const fullName = tr.querySelector('.fullname').textContent.trim();
+                const userName = email.split('@')[0];
                 const result = await apiUpdateUser({
-                    UserID: id,
-                    Role: newRole
+                    id: id,
+                    role: newRole,
+                    userName: userName,
+                    fullName: fullName,
+                    email: email
                 });
 
                 if (result.errorCode === 0) {

@@ -250,7 +250,7 @@ let deleteUser = (id) => {
             } else {
                 let user = await db.User.findOne({
                     where: {
-                        id: id
+                        UserID: id
                     }
                 })
 
@@ -262,7 +262,7 @@ let deleteUser = (id) => {
                 } else {
                     await db.User.destroy({
                         where: {
-                            id: id
+                            UserID: id
                         }
                     })
                     resolve({

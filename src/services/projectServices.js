@@ -62,7 +62,7 @@ let putEditProject = (data) => {
                errorMessage: 'Missing project data'
             })
          } else {
-            let check = checkIsValidInput(data, ['id', 'name', 'description', 'startDate', 'endDate', 'status']);
+            let check = checkIsValidInput(data, ['projectId', 'name', 'description', 'startDate', 'endDate', 'status']);
 
             if (!check.isValid) {
                resolve({
@@ -72,7 +72,7 @@ let putEditProject = (data) => {
             } else {
                let project = await db.Project.findOne({
                    where: {
-                       ProjectID: data.id
+                       ProjectID: data.projectId
                   }
                });
 
@@ -112,7 +112,7 @@ let patchUpdateStatusProject = async (data) => {
       };
    }
 
-   const check = checkIsValidInput(data, ['id', 'status']);
+   const check = checkIsValidInput(data, ['projectId', 'status']);
    if (!check.isValid) {
       return {
          errorCode: 2,
@@ -121,7 +121,7 @@ let patchUpdateStatusProject = async (data) => {
    }
 
    const project = await db.Project.findOne({
-       where: { ProjectID: data.id }
+       where: { ProjectID: data.projectId }
    });
 
    if (!project) {
@@ -143,7 +143,7 @@ let patchUpdateStatusProject = async (data) => {
 
    // Send email
    let users = await db.ProjectMember.findAll({
-      where: {ProjectId: data.id},
+       where: { ProjectId: data.projectId },
       include: [
          {
             model: db.User,

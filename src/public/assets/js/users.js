@@ -107,7 +107,7 @@
         const sel = el('#activityUser');
         if (sel && !sel.dataset.bound) {
             sel.innerHTML = `<option value="All">All</option>` +
-                users.map((u) => `<option value="${escapeHtml(u.FullName)}">${escapeHtml(u.FullName)}</option>`).join('');
+                users.map((u) => `<option value="${escapeHtml(String(u.UserID))}">${escapeHtml(u.FullName)}</option>`).join('');
             sel.dataset.bound = '1';
         }
     }
@@ -118,15 +118,15 @@
             showToast('Only Admin can create users', 'error');
             return;
         }
-
-        el('#userId').value = '';
-        el('#userName').value = '';
         el('#userEmail').value = '';
         el('#userFullName').value = '';
         el('#userRole').value = 'Member';
-
+        el('#btnDeleteUser').style.display = 'none';
+        el('#password').style.display = '';
         el('#userModalTitle').textContent = 'New user';
         el('#userModal').classList.add('show');
+
+        
     }
 
     // ✅ Open Edit User Modal
@@ -143,7 +143,8 @@
 
         el('#userRole').value = u.Role;
         el('#userRole').disabled = CURRENT_USER.Role !== 'Admin';
-
+        el('#btnDeleteUser').style.display = '';
+        el('#password').style.display = 'none';
         el('#userModalTitle').textContent = 'Edit user';
         el('#userModal').classList.add('show');
     }
@@ -184,12 +185,13 @@
                 showToast('Only Admin can create users', 'error');
                 return;
             }
-
-            const body = { userName, email, fullName, role };
+            const userName = email.split('@')[0];
+            const password = el('#passwordInput').value;
+            const body = { userName, email, password, fullName, role };
             const res = await api('/api/create-user', 'POST', body);
 
             if (res.errorCode === 0) {
-                const content = `User ${fullName} (ID: ${id}) create by ${CURRENT_USER.FullName} (ID: ${CURRENT_USER.UserID})`;
+                const content = `User ${fullName} create by ${CURRENT_USER.FullName} (ID: ${CURRENT_USER.UserID})`;
                 await logActivity(content, CURRENT_USER.UserID);
                 showToast('User created', 'success');
             } else {
@@ -211,7 +213,7 @@
         const res = await api(`/api/delete-user-by-id?id=${id}`, 'DELETE');
 
         if (res.errorCode === 0) {
-            const content = `User ${fullName} (ID: ${id}) delete by ${CURRENT_USER.FullName} (ID: ${CURRENT_USER.UserID})`;
+            const content = `User ID: ${id} delete by ${CURRENT_USER.FullName} (ID: ${CURRENT_USER.UserID})`;
             await logActivity(content, CURRENT_USER.UserID);
             showToast('User deleted', 'success');
             renderUsers();
@@ -225,17 +227,14 @@
         const q = (el('#activitySearch')?.value || '').toLowerCase();
         const who = el('#activityUser')?.value || 'All';
         const tbody = el('#activityTable tbody');
-
+        const users = await loadUsers();
         const logs = await loadActivityLogs();
-        console.log("Activity logs:", logs);
-        console.log("CreatedAt values:", logs.map(a => a.CreatedAt));
         const list = logs
             .filter((a) =>
-                (who === 'All' || a.Actor?.FullName === who) &&
+                (who === 'All' || String(a.UserID) === who) &&
                 (!q ||
-                    a.Action.toLowerCase().includes(q) ||
-                    a.Actor?.FullName.toLowerCase().includes(q))
-            )
+                    a.Action.toLowerCase().includes(q) 
+            ))
             .sort((a, b) => new Date(b.CreatedAt) - new Date(a.CreatedAt));
 
         tbody.innerHTML = list
@@ -279,9 +278,15 @@
 
         // Events
         el('#btnNewUser').addEventListener('click', openNew);
+        if (CURRENT_USER.Role === 'Member') {
+            el('#btnNewUser').style.display = 'none';
+            el('#btnClearActivity').style.display = 'none';
+        }
         el('#userForm').addEventListener('submit', saveUser);
-        el('#btnDeleteUser').addEventListener('click', () =>
-            delUser(el('#userId').value)
+        el('#btnDeleteUser').addEventListener('click', () => {
+            delUser(el('#userId').value);
+            closeModal();
+        } 
         );
         document
             .querySelectorAll('#userModal [data-close]')

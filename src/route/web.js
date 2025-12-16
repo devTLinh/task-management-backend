@@ -73,7 +73,6 @@ let initWebRoutes = (app) => {
     router.get('/api/get-project-by-id', projectController.getProjectByIdOrCreatedBy);
     router.delete('/api/delete-project-by-id', projectController.deleteProject);
     router.get('/api/search-projects-by-name-status', projectController.getSearchProjectsByName);
-
    // API task
     router.post('/api/create-task', taskController.postCreateTask);
     router.get('/api/get-all-tasks', taskController.getAllTasks);
